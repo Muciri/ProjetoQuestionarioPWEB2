@@ -1,4 +1,4 @@
-package br.edu.ifpb.ProjetoQuestionarioPWEB2;
+package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
