@@ -2,11 +2,15 @@ package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "Participante")
+@Data
+@NoArgsConstructor
 public class Participante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

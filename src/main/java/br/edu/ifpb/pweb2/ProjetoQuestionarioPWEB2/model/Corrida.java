@@ -3,13 +3,17 @@ package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "Corrida")
+@Data
+@NoArgsConstructor
 public class Corrida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

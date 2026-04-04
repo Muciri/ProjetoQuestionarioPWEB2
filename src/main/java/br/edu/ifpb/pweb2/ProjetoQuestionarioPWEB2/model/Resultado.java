@@ -2,12 +2,16 @@ package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Resultado")
+@Data
+@NoArgsConstructor
 public class Resultado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
