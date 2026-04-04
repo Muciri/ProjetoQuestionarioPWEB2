@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Perguntas</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f4;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .box {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            width: 600px;
+        }
+
+        h1 {
+            color: #3fa14c;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .pergunta {
+            text-align: left;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-left: 4px solid #3fa14c;
+            background-color: #fafafa;
+            border-radius: 4px;
+        }
+
+        .alternativas {
+            margin-top: 5px;
+            padding-left: 15px;
+        }
+
+        .alternativas li {
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h1 th:text="${titulo}">Lista de Perguntas</h1>
+    <p th:text="${mensagem}">Perguntas cadastradas</p>
+
+    <div th:if="${#lists.isEmpty(perguntas)}">
+        <p>Nenhuma pergunta encontrada.</p>
+    </div>
+
+    <div th:each="pergunta : ${perguntas}" class="pergunta">
+        <strong th:text="${pergunta.enunciado}">Enunciado</strong>
+
+        <ul class="alternativas">
+            <li th:each="alt, iterStat : ${pergunta.alternativas}"
+                th:text="${iterStat.index} + ' - ' + ${alt}">
+                Alternativa
+            </li>
+        </ul>
+
+        <p>
+            <strong>Resposta correta:</strong>
+            <span th:text="${pergunta.respostaCorreta}"></span>
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>
