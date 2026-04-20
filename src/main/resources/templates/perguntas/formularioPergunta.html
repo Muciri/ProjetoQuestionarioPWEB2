@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${titulo}">Formulário de Pergunta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn-salvar {
+            background: #3fa14c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .btn-cancelar {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2 th:text="${titulo}">Formulário</h2>
+
+    <form th:action="@{/perguntas/salvar}" th:object="${pergunta}" method="post">
+
+        <div class="form-group">
+            <label>Enunciado:</label>
+            <textarea th:field="*{enunciado}" rows="3" required></textarea>
+        </div>
+
+        <!-- acho que seria massa nessa parte colocar um script .js pra poder adicionar mais alternativas
+        com um botão "adicionar alternativa", usando o lance do DOM que a gente viu em LS -->
+        <div class="form-group">
+            <label>Alternativas:</label>
+            <input type="text" th:field="*{alternativas[0]}" placeholder="Alternativa 0" required style="margin-bottom: 5px;"/>
+            <input type="text" th:field="*{alternativas[1]}" placeholder="Alternativa 1" required style="margin-bottom: 5px;"/>
+            <input type="text" th:field="*{alternativas[2]}" placeholder="Alternativa 2" required style="margin-bottom: 5px;"/>
+            <input type="text" th:field="*{alternativas[3]}" placeholder="Alternativa 3" required style="margin-bottom: 5px;"/>
+            <input type="text" th:field="*{alternativas[4]}" placeholder="Alternativa 4" required />
+        </div>
+
+        <div class="form-group">
+            <label>Índice da Resposta Correta (0 a 4):</label>
+            <input type="number" th:field="*{respostaCorreta}" min="0" max="4" required />
+        </div>
+
+        <div class="form-group">
+            <label>ID da Corrida:</label>
+            <input type="number" th:field="*{corrida.id}" placeholder="ID da Corrida" required />
+        </div>
+
+        <button type="submit" class="btn-salvar">Salvar Pergunta</button>
+        <a th:href="@{/perguntas}" class="btn-cancelar">Cancelar</a>
+    </form>
+</div>
+
+</body>
+</html>
