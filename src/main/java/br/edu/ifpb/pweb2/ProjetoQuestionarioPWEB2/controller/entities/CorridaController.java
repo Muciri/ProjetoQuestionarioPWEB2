@@ -3,6 +3,7 @@ package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.entities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.*;
-
+import jakarta.validation.Valid;
 
 
 
@@ -30,10 +31,12 @@ public class CorridaController {
     @GetMapping("/nova")
     public String formCorrida(Model model) {
         model.addAttribute("corrida",  new Corrida());
-        return "corrida-form";
+        return "corridas/form";
     }
 
 
+
+    // aqui o administrador vai ter a listagem
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("corridas", service.listar());
@@ -54,10 +57,19 @@ public class CorridaController {
     }
 
 
-    @PostMapping
-    public String salvar(@ModelAttribute Corrida corrida, RedirectAttributes  flash){
+    @PostMapping("/salvar")
+    public String salvar(@Valid @ModelAttribute("corrida") Corrida corrida, BindingResult result, RedirectAttributes  flash){
+        if(result.hasErrors()) {
+            return "corridas/form";
+        }
         service.salvar(corrida);
         flash.addFlashAttribute("mensagem", "Corrida cadastrada com sucesso!");
+
+        // Apos o cadastro, pergunta se quer fazer o cadastro de perguntas
+        if (corrida.getId() == null) {
+            return "redirect:/corridas/detalhes" + corrida.getId();
+        }
+
         return "redirect:/corridas";
     }
 
