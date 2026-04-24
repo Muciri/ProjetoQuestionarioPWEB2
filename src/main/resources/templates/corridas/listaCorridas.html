@@ -5,24 +5,29 @@
     <title>Gerenciar Corridas</title>
 </head>
 <body>
-    <div></div>
-    <h1></h1>
-    <a href=""></a>
-    <table>
+    <div th:if="${mensagem}" th:text="${mensagem}" style="color: green; font-weight: bold ;"></div>
+    <h1>Corridas Cadastradas</h1>
+
+    <!-- p + a para melhorar o visual -->
+    <p>    
+        <a th:href="@{/corridas/nova}">+ Criar Nova Corrida</a>
+</p>
+    <table border="1">
         <thead>
+            <!-- Utilizei o scope para melhorar a acessiblidade para deficiente visual -->
             <tr>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th scope="col">Título</th>
+                <th scope="col">Tempo</th>
+                <th scope="col">Ações</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td></td>
-                <td></td>
+            <tr th:each="c : ${corridas}">
+                <td th:text="${c.titulo}"></td>
+                <td th:text="${c.tempoSegundos} + 's'"></td>
                 <td>
-                    <a href=""></a>
-                    <a href=""></a>
+                    <a th:href="@{/corridas/{id}(id=${c.id})}">Editar</a>
+                    <a th:href="@{/corridas/excluir/{id}(id=${c.id})}" onclick="return confirm('Deseja realmente excluir esta corrida?')">Excluir</a>
                 </td>
 
             </tr>
