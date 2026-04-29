@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h1>ERRO</h1>
+<p>Detalhes do erro/exceção:</p>
+<ul>
+  <li>Momento do erro: <strong th:text="${timestamp}"></strong></li>
+  <li>Status do erro: <strong th:text="${status}"></strong></li>
+  <li>Erro: <strong th:text="${error}"></strong></li>
+  <li>Mensagem: <strong th:text="${message}"></strong></li>
+  <li>URL que gerou o erro: <strong th:text="${path}"></strong></li>
+  <li>Exceção: <strong th:text="${exception}"></strong></li>
+</ul>
+<p><strong th:text="${trace}"></strong></p>
+</body>
+</html>

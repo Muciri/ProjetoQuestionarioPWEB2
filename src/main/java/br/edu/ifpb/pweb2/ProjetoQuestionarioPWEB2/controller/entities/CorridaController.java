@@ -40,7 +40,7 @@ public class CorridaController {
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("corridas", service.listar());
-        return "corridas/listarCorridas";
+        return "corridas/listaCorridas";
     }
 
     @GetMapping("/editar/{id}")
