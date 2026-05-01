@@ -20,35 +20,18 @@ public class PerguntaController {
         this.perguntaRepository = perguntaRepository;
         this.perguntaService = perguntaService;
     }
-
-    // galera, coloquei esse método aqui por que ainda não tem feito o lance do admin e tal
-    // depois de implementar a autenticação e interceptadores, vou refatorar este código, tirar a verificação repetida
-    private boolean isUsuarioAdmin() {
-        return true;
-    }
     
     @GetMapping("")
     public ModelAndView listarPerguntas(ModelAndView model, RedirectAttributes redirectAttributes) {
-        if (!isUsuarioAdmin()) {
-            redirectAttributes.addFlashAttribute("erro", "acesso negado");
-            return new ModelAndView("redirect:/perguntas");
-        }
-
         model.setViewName("perguntas/listaPerguntas");
         model.addObject("titulo", "Lista de Perguntas");
         model.addObject("perguntas", perguntaService.getPerguntas());
-        model.addObject("isAdmin", isUsuarioAdmin());
 
         return model;
     }
 
     @GetMapping("/form")
     public ModelAndView exibirFormularioCadastro(ModelAndView model, RedirectAttributes redirectAttributes) {
-        if (!isUsuarioAdmin()) {
-            redirectAttributes.addFlashAttribute("erro", "acesso negado");
-            return new ModelAndView("redirect:/perguntas");
-        }
-
         model.setViewName("perguntas/formularioPergunta");
         model.addObject("pergunta", new Pergunta());
         model.addObject("titulo", "Nova Pergunta");
@@ -57,11 +40,6 @@ public class PerguntaController {
 
     @PostMapping("/salvar")
     public ModelAndView salvarPergunta(@ModelAttribute("pergunta") Pergunta pergunta, RedirectAttributes redirectAttributes) {
-        if (!isUsuarioAdmin()) {
-            redirectAttributes.addFlashAttribute("erro", "acesso negado");
-            return new ModelAndView("redirect:/perguntas");
-        }
-
         if (pergunta.getId() != null) {
             perguntaService.UpdatePergunta(pergunta.getId(), pergunta);
         } else {
@@ -74,11 +52,6 @@ public class PerguntaController {
 
     @GetMapping("/editar/{id}")
     public ModelAndView exibirFormularioEdicao(@PathVariable Long id,ModelAndView model, RedirectAttributes redirectAttributes) {
-        if (!isUsuarioAdmin()) {
-            redirectAttributes.addFlashAttribute("erro", "acesso negado");
-            return new ModelAndView("redirect:/perguntas");
-        }
-
         model.setViewName("perguntas/formularioPergunta");
         Pergunta pergunta = perguntaService.getPerguntaById(id);
 
@@ -91,11 +64,6 @@ public class PerguntaController {
 
     @GetMapping("/excluir/{id}")
     public ModelAndView excluirPergunta(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        if (!isUsuarioAdmin()) {
-            redirectAttributes.addFlashAttribute("erro", "acesso negado");
-            return new ModelAndView("redirect:/perguntas");
-        }
-
         perguntaService.deletePerguntaById(id);
 
         redirectAttributes.addFlashAttribute("mensagem", "pergunta excluída com sucesso!");

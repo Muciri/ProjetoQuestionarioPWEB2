@@ -96,7 +96,7 @@
             <p th:text="${mensagem}" class="mensagem"></p>
             <p th:text="${erro}" class="erro"></p>
 
-            <div th:if="${isAdmin}" class="admin-actions">
+            <div class="admin-actions">
                 <a th:href="@{/perguntas/form}" class="btn-nova">+ Nova Pergunta</a>
             </div>
 
@@ -118,7 +118,7 @@
                     <span th:text="${pergunta.respostaCorreta}"></span>
                 </p>
 
-                <div th:if="${isAdmin}" class="acoes-pergunta">
+                <div class="acoes-pergunta">
                     <a th:href="@{/perguntas/editar/{id}(id=${pergunta.id})}" class="editar">Editar</a>
                     <a th:href="@{/perguntas/excluir/{id}(id=${pergunta.id})}"
                        class="excluir"
