@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        .header {
+            background-color: #3fa14c;
+            color: white;
+            padding: 15px 30px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            margin: 0;
+        }
+
+        .header-nav a {
+            color: white;
+            margin-left: 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .header-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+          background-color: #3fa14c;
+          color: #ccc;
+          text-align: center;
+          padding: 10px;
+          font-size: 14px;
+        }
+        .footer p {
+          font-family:"Arial";
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-container">
+            <h2 class="header-logo">Projeto Questionário</h2>
+
+            <nav class="header-nav">
+                <a th:href="@{/}">Início</a>
+
+                <!-- galera, tem que adicionar aqui outros links do participante comum tipo "visualizar corridas"-->
+
+                <span th:if="${session.participante != null and session.participante.admin == true}">
+                    <a th:href="@{/perguntas}">Gerenciar Perguntas</a>
+                    <a th:href="@{/corridas}">Gerenciar Corridas</a>
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <main layout:fragment="conteudo">
+        <!-- o conteúdo das páginas fica aqui -->
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 - Equipe FFGM</p>
+    </footer>
+
+</body>
+</html>

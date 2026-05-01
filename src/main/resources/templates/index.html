@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/mainlayout}">
+
 <head>
     <meta charset="UTF-8">
     <title>Início</title>
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f4f4f4;
-
+        .page-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: calc(100vh - 120px);
+            background-color: #f4f4f4;
         }
 
         .box {
@@ -43,33 +43,37 @@
         }
     </style>
 </head>
-<body>
 
-<!-- Usuário NÃO logado -->
-<div class="box" th:if="${session.participante == null}">
-    <h1 th:text="${titulo}">Sistema</h1>
-    <p th:text="${mensagem}">Mensagem de boas-vindas</p>
-    <div class="links">
-        <a th:href="@{/autenticacao/login}" class="btn-cancelar">Fazer Login</a>
-        <a th:href="@{/autenticacao/cadastro}" class="btn-cadastro">Criar conta</a>
+<main layout:fragment="conteudo">
+    <div class="page-container">
+
+        <!-- Usuário NÃO logado -->
+        <div class="box" th:if="${session.participante == null}">
+            <h1 th:text="${titulo}">Sistema</h1>
+            <p th:text="${mensagem}">Mensagem de boas-vindas</p>
+            <div class="links">
+                <a th:href="@{/autenticacao/login}">Fazer Login</a>
+                <a th:href="@{/autenticacao/cadastro}">Criar conta</a>
+            </div>
+        </div>
+
+        <!-- Usuário logado -->
+        <div class="box" th:if="${session.participante != null}">
+            <h1>Bem-vindo, <span th:text="${session.participante.nome}"></span>!</h1>
+            <p th:text="${mensagem}">Mensagem de boas-vindas</p>
+
+            <div class="links" th:if="${session.participante.admin == true}">
+                <a th:href="@{/perguntas}">Gerenciar Perguntas</a>
+                <br>
+                <a th:href="@{/corridas}">Gerenciar Corridas</a>
+            </div>
+
+            <form th:action="@{/autenticacao/logout}" method="post">
+                <button type="submit">Sair</button>
+            </form>
+        </div>
+
     </div>
-</div>
+</main>
 
-<!-- Usuário logado -->
-<div class="box" th:if="${session.participante != null}">
-    <h1>Bem-vindo, <span th:text="${session.participante.nome}"></span>!</h1>
-    <p th:text="${mensagem}">Mensagem de boas-vindas</p>
-
-    <div class="links" th:if="${session.participante.admin == true}">
-        <a th:href="@{/perguntas}">Gerenciar Perguntas</a>
-        <br>
-        <a th:href="@{/corridas}">Gerenciar Corridas</a>
-    </div>
-
-    <form th:action="@{/autenticacao/logout}" method="post">
-        <button type="submit">Sair</button>
-    </form>
-</div>
-
-</body>
 </html>

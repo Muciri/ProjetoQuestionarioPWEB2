@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/mainlayout}">
+
 <head>
     <meta charset="UTF-8">
     <title>Perguntas</title>
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f4f4f4;
-
+        .page-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            padding: 40px;
+            background-color: #f4f4f4;
         }
 
         .box {
@@ -85,42 +85,50 @@
         .excluir {
             color: red;
         }
-
     </style>
 </head>
-<body>
-<div class="box">
-    <h1 th:text="${titulo}">Lista de Perguntas</h1>
 
-    <p th:text="${mensagem}" class="mensagem"></p>
-    <p th:text="${erro}" class="erro"></p>
+<main layout:fragment="conteudo">
+    <div class="page-container">
+        <div class="box">
+            <h1 th:text="${titulo}">Lista de Perguntas</h1>
 
-    <div th:if="${isAdmin}" class="admin-actions">
-        <a th:href="@{/perguntas/form}" class="btn-nova">+ Nova Pergunta</a>
-    </div>
+            <p th:text="${mensagem}" class="mensagem"></p>
+            <p th:text="${erro}" class="erro"></p>
 
-    <div th:if="${#lists.isEmpty(perguntas)}">
-        <p>Nenhuma pergunta encontrada.</p>
-    </div>
+            <div th:if="${isAdmin}" class="admin-actions">
+                <a th:href="@{/perguntas/form}" class="btn-nova">+ Nova Pergunta</a>
+            </div>
 
-    <div th:each="pergunta : ${perguntas}" class="pergunta">
-        <strong th:text="${pergunta.enunciado}">Enunciado</strong>
+            <div th:if="${#lists.isEmpty(perguntas)}">
+                <p>Nenhuma pergunta encontrada.</p>
+            </div>
 
-        <ul class="alternativas">
-            <li th:each="alt, iterStat : ${pergunta.alternativas}"
-                th:text="${iterStat.index} + ' - ' + ${alt}">
-            </li>
-        </ul>
+            <div th:each="pergunta : ${perguntas}" class="pergunta">
+                <strong th:text="${pergunta.enunciado}"></strong>
 
-        <p><strong>Resposta correta:</strong> <span th:text="${pergunta.respostaCorreta}"></span></p>
+                <ul class="alternativas">
+                    <li th:each="alt, iterStat : ${pergunta.alternativas}"
+                        th:text="${iterStat.index} + ' - ' + ${alt}">
+                    </li>
+                </ul>
 
-        <div th:if="${isAdmin}" class="acoes-pergunta">
-            <a th:href="@{/perguntas/editar/{id}(id=${pergunta.id})}" class="editar">Editar</a>
-            <a th:href="@{/perguntas/excluir/{id}(id=${pergunta.id})}"
-               class="excluir"
-               onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                <p>
+                    <strong>Resposta correta:</strong>
+                    <span th:text="${pergunta.respostaCorreta}"></span>
+                </p>
+
+                <div th:if="${isAdmin}" class="acoes-pergunta">
+                    <a th:href="@{/perguntas/editar/{id}(id=${pergunta.id})}" class="editar">Editar</a>
+                    <a th:href="@{/perguntas/excluir/{id}(id=${pergunta.id})}"
+                       class="excluir"
+                       onclick="return confirm('Tem certeza que deseja excluir?')">
+                        Excluir
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</body>
+</main>
+
 </html>
