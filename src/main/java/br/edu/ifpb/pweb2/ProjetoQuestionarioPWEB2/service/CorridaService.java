@@ -1,23 +1,25 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service;
 
-import java.util.List;
-
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.CorridaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.CorridaRepository;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.*;
+import java.util.List;
 
 @Service
 public class CorridaService {
 
-
     @Autowired
     private CorridaRepository repository;
 
-
-    public List<Corrida> listar(){
+    public List<Corrida> listar() {
         return repository.findAll();
+    }
+
+    // Usado no lobby do participante (UC07) — só corridas ativas
+    public List<Corrida> listarAtivas() {
+        return repository.findByAtivaTrue().stream().filter(c -> c.getPerguntas() != null && !c.getPerguntas().isEmpty()).toList();
     }
 
     public Corrida salvar(Corrida corrida) {
@@ -28,9 +30,21 @@ public class CorridaService {
         repository.deleteById(id);
     }
 
-    // se num achar dentro do banco de dados o id ele vai lançar uma exceção pelo orElseThrow
-    public Corrida buscarPorId(Long id){
-        return repository.findById(id).orElseThrow();
+    public Corrida buscarPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Corrida não encontrada: " + id));
     }
 
+
+    public boolean corridaValida(Corrida corrida){
+        if(corrida.getTempoSegundos() == null || corrida.getTempoSegundos() < 10){
+            return false;
+        }
+        if (corrida.getPerguntas() == null || corrida.getPerguntas().isEmpty()) {
+            return false;
+        }
+        return true;
+
+        // vou colocar em um so if dps esses 2 ifs 
+    }
 }

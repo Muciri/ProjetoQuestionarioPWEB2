@@ -1,31 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-<head><title>Cadastro de Corrida</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${corrida.id == null ? 'Nova Corrida' : 'Editar Corrida'}">Corrida</title>
+    <link rel="stylesheet" th:href="@{/css/base.css}">
 </head>
 <body>
+ 
     <h1 th:text="${corrida.id == null ? 'Nova Corrida' : 'Editar Corrida'}"></h1>
-
-    <form th:action="@{/corridas/salvar} th:object="${corrida} method="post">
-        <input type="hidden" th:field="*{id}"/>
-        
-        <div>
-            <label for="">Título:</label>
-            <input type="text" th:field="*{titulo}">
-            <span th:if{*fields.hasErrors('titulo')}" th:errors="*{titulo}" style="color: red;"></span>
-        </div>
-
-        <div>
-            <label for="">Descrição:</label>
-            <textarea name="" id="" th:field="*{descricao}"></textarea>
-        </div>
-
-        <div>
-            <label for="">Tempo (segundos):</label>
-            <input type="number" name="" id="" th:field="*{tempoSegundos}"/>
-        </div>
-        <button type="submit">Salvar Corrida</button>
-        <a th:href="@{/corridas}">Cancelar</a>
-    </form>
-    
+ 
+    <p class="mensagem-erro" th:if="${aviso}" th:text="${aviso}"></p>
+ 
+    <div class="card" style="max-width: 540px;">
+        <form th:action="@{/corridas/salvar}" th:object="${corrida}" method="post">
+ 
+            <input type="hidden" th:field="*{id}" />
+ 
+            <div class="campo">
+                <label for="titulo">Título *</label>
+                <input type="text" id="titulo" th:field="*{titulo}" placeholder="Ex: Corrida de Matemática" />
+                <span class="campo-erro" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></span>
+            </div>
+ 
+            <div class="campo">
+                <label for="descricao">Descrição *</label>
+                <textarea id="descricao" th:field="*{descricao}" rows="4" placeholder="Descreva a corrida..."></textarea>
+                <span class="campo-erro" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></span>
+            </div>
+ 
+            <div class="campo">
+                <label for="tempoSegundos">Tempo limite em segundos * (mínimo 10)</label>
+                <input type="number" id="tempoSegundos" th:field="*{tempoSegundos}" min="10" placeholder="Ex: 60" />
+                <span class="campo-erro" th:if="${#fields.hasErrors('tempoSegundos')}" th:errors="*{tempoSegundos}"></span>
+            </div>
+ 
+            <div class="campo-checkbox">
+                <input type="checkbox" id="ativa" th:field="*{ativa}" />
+                <label for="ativa">Corrida ativa (visível no lobby para participantes)</label>
+            </div>
+ 
+            <div class="acoes">
+                <button class="btn btn-primary" type="submit">Salvar</button>
+                <a class="btn-link" th:href="@{/corridas}">Cancelar</a>
+            </div>
+ 
+        </form>
+    </div>
+ 
 </body>
 </html>

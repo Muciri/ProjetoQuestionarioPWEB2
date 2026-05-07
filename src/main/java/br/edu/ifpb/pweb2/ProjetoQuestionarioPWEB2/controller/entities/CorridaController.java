@@ -1,88 +1,126 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.entities;
 
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.*;
-import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
-
-// Aqui implementando toda a logica da UC01 UC02 UC03 do projeto, 
-// o qual dentro da UC01 eu fiz a implementação da exibição do 
-// formulario para a corrida nova,  o qual fiz pelo metodo formCorrida, 
-// salvar nova corrida pelo metodo salvar, 
+// UC01 – Administrador cadastra corrida
+// UC02 – Administrador exclui corrida
+// UC03 – Administrador modifica corrida
 @Controller
 @RequestMapping("/corridas")
 public class CorridaController {
+
     @Autowired
     private CorridaService service;
 
-    @GetMapping("/nova")
-    public String formCorrida(Model model) {
-        model.addAttribute("corrida",  new Corrida());
-        return "corridas/form";
-    }
-
-
-
-    // aqui o administrador vai ter a listagem
+    // -------------------------------------------------------
+    // Listagem — GET /corridas
+    // -------------------------------------------------------
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("corridas", service.listar());
         return "corridas/listaCorridas";
     }
 
-    @GetMapping("/editar/{id}")
+    // -------------------------------------------------------
+    // UC01 — exibe formulário de nova corrida — GET /corridas/nova
+    // -------------------------------------------------------
+    @GetMapping("/nova")
+    public String formNova(Model model) {
+        model.addAttribute("corrida", new Corrida());
+        return "corridas/form";
+    }
+
+    // -------------------------------------------------------
+    // UC03 — exibe formulário de edição — GET /corridas/{id}/editar
+    // -------------------------------------------------------
+    @GetMapping("/{id}/editar")
     public String formEditar(@PathVariable Long id, Model model) {
         model.addAttribute("corrida", service.buscarPorId(id));
         return "corridas/form";
     }
 
-    @GetMapping("/excluir/{id}")
-    public String excluir(@PathVariable Long id, RedirectAttributes flash){
-        service.excluir(id);
-        flash.addFlashAttribute("mensagem", "Corrida excluída com sucesso!!");
-        return "redirect:/corridas";
-    }
-
-
+    // -------------------------------------------------------
+    // UC01 e UC03 — salva (novo ou editado) — POST /corridas/salvar
+    //
+    // Como distinguir novo de edição:
+    //   - Novo:   corrida.getId() == null  (campo hidden vazio no form)
+    //   - Editar: corrida.getId() != null
+    //
+    // IMPORTANTE: verificar isNova ANTES de chamar service.salvar(),
+    // pois após salvar o JPA preenche o id mesmo em objetos novos.
+    // -------------------------------------------------------
     @PostMapping("/salvar")
-    public String salvar(@Valid @ModelAttribute("corrida") Corrida corrida, BindingResult result, RedirectAttributes  flash){
-        if(result.hasErrors()) {
+    public String salvar(@Valid @ModelAttribute("corrida") Corrida corrida,BindingResult result, RedirectAttributes flash) {
+
+        if (result.hasErrors()) {
             return "corridas/form";
         }
-        service.salvar(corrida);
-        flash.addFlashAttribute("mensagem", "Corrida cadastrada com sucesso!");
 
-        // Apos o cadastro, pergunta se quer fazer o cadastro de perguntas
-        if (corrida.getId() == null) {
-            return "redirect:/corridas/detalhes" + corrida.getId();
+        boolean isNova = (corrida.getId() == null);
+        Corrida salva = service.salvar(corrida);
+
+
+        // essa condicional vai negar a permissão de ativar a corrida sem perguntas
+        if(Boolean.TRUE.equals(corrida.getAtiva()) && (corrida.getPerguntas() == null || corrida.getPerguntas().isEmpty())){
+            corrida.setAtiva(false);
+            flash.addFlashAttribute("aviso", "A corrida foi salva como INATIVA/Falsa pois ela ainda não possui perguntas. Por favor, cadastre as perguntas para ativar");
         }
+        if (isNova) {
+            // UC01: após cadastro, pergunt
+            // a se quer cadastrar perguntas
+            flash.addFlashAttribute("mensagem",
+                    "Corrida \"" + salva.getTitulo() + "\" cadastrada com sucesso!");
+            return "redirect:/corridas/" + salva.getId() + "/pos-cadastro";
+        } else {
+            // UC03: edição — volta para lista com mensagem
+            flash.addFlashAttribute("mensagem",
+                    "Corrida \"" + salva.getTitulo() + "\" atualizada com sucesso!");
+            return "redirect:/corridas";
+        }
+    }
 
+    // -------------------------------------------------------
+    // UC01 — tela pós-cadastro: "Deseja cadastrar perguntas?"
+    // GET /corridas/{id}/pos-cadastro
+    // -------------------------------------------------------
+    @GetMapping("/{id}/pos-cadastro")
+    public String posCadastro(@PathVariable Long id, Model model) {
+        model.addAttribute("corrida", service.buscarPorId(id));
+        return "corridas/pos-Cadastro"; // Corrigir aqui, pois era pos-cadastro, o correto é posCadastro
+    }
+
+    // -------------------------------------------------------
+    // UC02 — exclui corrida — GET /corridas/{id}/excluir
+    // -------------------------------------------------------
+    @GetMapping("/{id}/excluir")
+    public String excluir(@PathVariable Long id, RedirectAttributes flash) {
+        Corrida corrida = service.buscarPorId(id);
+        String titulo = corrida.getTitulo();
+        service.excluir(id);
+        flash.addFlashAttribute("mensagem", "Corrida \"" + titulo + "\" excluída com sucesso!");
         return "redirect:/corridas";
     }
 
 
-    @PostMapping("/{id}")
-    public String atualizar(@PathVariable Long id, @ModelAttribute Corrida corrida, RedirectAttributes flash){
-        corrida.setId(id);
-        service.salvar(corrida);
-        flash.addFlashAttribute("mensagem", "Corrida atualizada com sucesso!");
-        return "redirect:/corridas";
+    @GetMapping("/{id}")
+    public String detaqlhes(@PathVariable Long id, Model model){
+        Corrida corrida = service.buscarPorId(id);
+        model.addAttribute("corrida", corrida);
+        model.addAttribute("corridaValida", service.corridaValida(corrida));
+        return "corridas/detalhesCorrida";
+    }     
 
 
-    }
     
-
 }

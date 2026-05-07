@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Corrida Cadastrada</title>
+</head>
+<body>
+
+    <h1>Corrida cadastrada com sucesso!</h1>
+
+    <p>
+        A corrida <strong th:text="${corrida.titulo}"></strong> foi criada.
+    </p>
+
+    <p>Deseja cadastrar perguntas para ela agora?</p>
+
+    <!-- Aqui é o formulário de pergunta vinculado a essa corrida -->
+    <a th:href="@{/perguntas/nova(corridaId=${corrida.id})}">Sim, cadastrar perguntas</a>
+    |
+
+    <!-- Irá voltar pra lista de corridas -->
+    <a th:href="@{/corridas}">Não, voltar à lista</a>
+
+</body>
+</html>

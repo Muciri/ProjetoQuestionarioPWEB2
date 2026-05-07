@@ -1,0 +1,349 @@
+/* =============================================
+   BASE.CSS — Projeto Questionário
+   Importar em todos os templates:
+   <link rel="stylesheet" th:href="@{/css/base.css}">
+   ============================================= */
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── Tipografia e corpo ── */
+body {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    background-color: #f4f9f4;
+    color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 26px;
+    color: #2e7d32;
+    border-bottom: 3px solid #2e7d32;
+    padding-bottom: 10px;
+    margin-bottom: 24px;
+}
+
+h2 {
+    font-size: 20px;
+    color: #2e7d32;
+    margin-bottom: 20px;
+}
+
+p {
+    color: #555555;
+    line-height: 1.6;
+}
+
+/* ── Layout principal ── */
+main {
+    flex: 1;
+    padding: 40px;
+}
+
+/* ── Header ── */
+.header {
+    background-color: #2e7d32;
+    color: white;
+    padding: 14px 30px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logo {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+.header-nav a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+.header-nav a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* ── Footer ── */
+.footer {
+    background-color: #2e7d32;
+    color: #c8e6c9;
+    text-align: center;
+    padding: 12px;
+    font-size: 13px;
+}
+
+/* ── Cards ── */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 32px;
+}
+
+.card-sm {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.card-md {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ── Formulários ── */
+.campo {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    color: #2e7d32;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #c8e6c9;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fafff9;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #2e7d32;
+    background-color: #ffffff;
+}
+
+textarea { resize: vertical; }
+
+.campo-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.campo-checkbox input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: #2e7d32;
+    cursor: pointer;
+}
+
+.campo-checkbox label {
+    margin: 0;
+    font-weight: normal;
+    color: #1a1a1a;
+    cursor: pointer;
+}
+
+/* ── Botões ── */
+.btn {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: #2e7d32;
+    color: #ffffff;
+}
+
+.btn-primary:hover { background-color: #1b5e20; }
+
+.btn-secondary {
+    background-color: transparent;
+    color: #2e7d32;
+    border: 1px solid #2e7d32;
+}
+
+.btn-secondary:hover { background-color: #e8f5e9; }
+
+.btn-danger {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.btn-danger:hover { background-color: #ffcdd2; }
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #2e7d32;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 0;
+}
+
+.btn-link:hover { text-decoration: underline; }
+
+.btn-full { width: 100%; text-align: center; }
+
+/* ── Tabelas ── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+thead {
+    background-color: #2e7d32;
+    color: #ffffff;
+}
+
+thead th {
+    padding: 13px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+tbody tr:last-child { border-bottom: none; }
+
+tbody tr:hover { background-color: #f1f8e9; }
+
+tbody td {
+    padding: 12px 16px;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.td-vazia {
+    text-align: center;
+    color: #9e9e9e;
+    padding: 32px !important;
+    font-style: italic;
+}
+
+/* ── Badges de status ── */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-ativa  { background-color: #c8e6c9; color: #1b5e20; }
+.badge-inativa { background-color: #f5f5f5; color: #757575; }
+
+/* ── Mensagens flash ── */
+.mensagem-sucesso {
+    background-color: #e8f5e9;
+    border-left: 4px solid #2e7d32;
+    color: #1b5e20;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.mensagem-erro {
+    background-color: #ffebee;
+    border-left: 4px solid #c62828;
+    color: #c62828;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.campo-erro {
+    color: #c62828;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* ── Ações em linha (tabelas) ── */
+.acoes { display: flex; gap: 6px; align-items: center; }
+
+.acoes a {
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 1px solid transparent;
+}
+
+.acoes .btn-editar   { background-color: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+.acoes .btn-editar:hover   { background-color: #c8e6c9; }
+
+.acoes .btn-excluir  { background-color: #ffebee; color: #c62828; border-color: #ef9a9a; }
+.acoes .btn-excluir:hover  { background-color: #ffcdd2; }
+
+.acoes .btn-ver      { background-color: #e3f2fd; color: #1565c0; border-color: #90caf9; }
+.acoes .btn-ver:hover      { background-color: #bbdefb; }
+
+/* ── Utilitários ── */
+.mt-sm  { margin-top: 12px; }
+.mt-md  { margin-top: 24px; }
+.mt-lg  { margin-top: 40px; }
+.mb-sm  { margin-bottom: 12px; }
+.mb-md  { margin-bottom: 24px; }
+
+.text-center { text-align: center; }
+.text-muted  { color: #9e9e9e; font-style: italic; }
+
+.row-acoes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.voltar a {
+    color: #2e7d32;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.voltar a:hover { text-decoration: underline; }

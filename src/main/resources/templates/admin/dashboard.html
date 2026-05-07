@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin</title>
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <style>
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #c8e6c9;
+            padding: 20px 24px;
+        }
+
+        .stat-card .stat-label {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .stat-card .stat-valor {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .stat-card .stat-sub {
+            font-size: 12px;
+            color: #9e9e9e;
+            margin-top: 4px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+            padding-left: 10px;
+        }
+
+        .lista-item {
+            background: #fff;
+            border: 1px solid #c8e6c9;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lista-item-info .titulo {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .lista-item-info .sub {
+            font-size: 12px;
+            color: #777;
+            margin-top: 2px;
+        }
+
+        .lista-item-acoes {
+            display: flex;
+            gap: 6px;
+        }
+
+        .aviso-vazio {
+            background: #f9f9f9;
+            border: 1px dashed #c8e6c9;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #9e9e9e;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .alerta-sem-perguntas {
+            background: #fff8e1;
+            border-left: 4px solid #f9a825;
+            color: #795548;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Dashboard Administrativo</h1>
+
+    <p class="mensagem-sucesso" th:if="${mensagem}" th:text="${mensagem}"></p>
+    <p class="mensagem-erro"    th:if="${aviso}"    th:text="${aviso}"></p>
+
+    <!-- Cartões de resumo -->
+    <div class="grid-2">
+        <div class="stat-card">
+            <p class="stat-label">Total de Corridas</p>
+            <p class="stat-valor" th:text="${totalCorridas}">0</p>
+            <p class="stat-sub"   th:text="${totalAtivas} + ' ativa(s)'"></p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Total de Perguntas</p>
+            <p class="stat-valor" th:text="${totalPerguntas}">0</p>
+            <p class="stat-sub">cadastradas no sistema</p>
+        </div>
+    </div>
+
+    <!-- Seção: Corridas -->
+    <div class="section-header">
+        <h2>Corridas</h2>
+        <a class="btn btn-primary" th:href="@{/corridas/nova}">+ Nova Corrida</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(corridas)}" class="aviso-vazio">
+        Nenhuma corrida cadastrada ainda.
+    </div>
+
+    <div th:each="c : ${corridas}" class="lista-item">
+        <div class="lista-item-info">
+            <p class="titulo" th:text="${c.titulo}"></p>
+            <p class="sub">
+                <span th:text="${c.tempoSegundos} + 's'"></span> ·
+                <span th:text="${c.perguntas != null ? #lists.size(c.perguntas) : 0} + ' pergunta(s)'"></span> ·
+                <span class="badge badge-ativa"   th:if="${c.ativa}">Ativa</span>
+                <span class="badge badge-inativa"  th:unless="${c.ativa}">Inativa</span>
+            </p>
+            <!-- Alerta: corrida ativa mas sem perguntas -->
+            <span class="alerta-sem-perguntas"
+                  th:if="${c.ativa and (c.perguntas == null or #lists.isEmpty(c.perguntas))}">
+                ⚠ Corrida ativa sem perguntas — será ignorada no lobby.
+            </span>
+        </div>
+        <div class="lista-item-acoes acoes">
+            <a class="btn-ver"    th:href="@{/corridas/{id}(id=${c.id})}">Detalhes</a>
+            <a class="btn-editar" th:href="@{/corridas/{id}/editar(id=${c.id})}">Editar</a>
+            <a class="btn-excluir"
+               th:href="@{/corridas/{id}/excluir(id=${c.id})}"
+               th:data-titulo="${c.titulo}"
+               onclick="return confirm('Excluir \'' + this.dataset.titulo + '\'?')">Excluir</a>
+        </div>
+    </div>
+
+    <div class="voltar mt-md" style="margin-bottom: 32px;">
+        <a th:href="@{/corridas}">Ver lista completa de corridas →</a>
+    </div>
+
+    <!-- Seção: Perguntas -->
+    <div class="section-header">
+        <h2>Perguntas</h2>
+        <a class="btn btn-primary" th:href="@{/perguntas/form}">+ Nova Pergunta</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(perguntas)}" class="aviso-vazio">
+        Nenhuma pergunta cadastrada ainda.
+    </div>
+
+    <div th:each="p : ${perguntas}" class="lista-item">
+        <div class="lista-item-info">
+            <p class="titulo" th:text="${p.enunciado}"></p>
+            <p class="sub"
+               th:text="'Corrida: ' + (${p.corrida != null ? p.corrida.titulo : '—'})"></p>
+        </div>
+        <div class="lista-item-acoes acoes">
+            <a class="btn-editar"  th:href="@{/perguntas/editar/{id}(id=${p.id})}">Editar</a>
+            <a class="btn-excluir"
+               th:href="@{/perguntas/excluir/{id}(id=${p.id})}"
+               onclick="return confirm('Excluir esta pergunta?')">Excluir</a>
+        </div>
+    </div>
+
+    <div class="voltar mt-md">
+        <a th:href="@{/}">← Voltar ao Início</a>
+    </div>
+
+</body>
+</html>

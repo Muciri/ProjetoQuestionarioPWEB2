@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Detalhes — ' + ${corrida.titulo}">Detalhes da Corrida</title>
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+</head>
+<body>
+ 
+    <h1 th:text="${corrida.titulo}">Título da Corrida</h1>
+ 
+    <!-- Aviso: corrida inválida para iniciar -->
+    <p class="mensagem-erro"
+       th:if="${!corridaValida}">
+        Esta corrida não pode ser iniciada: verifique se possui perguntas cadastradas e tempo válido.
+    </p>
+ 
+    <p class="mensagem-sucesso"
+       th:if="${corridaValida}">
+        Corrida válida e pronta para ser utilizada no lobby.
+    </p>
+ 
+    <div class="card" style="max-width: 600px; margin-bottom: 24px;">
+ 
+        <table style="width:100%; border:none; box-shadow:none;">
+            <tbody>
+                <tr>
+                    <td style="padding: 10px 0; font-weight: bold; color: #2e7d32; width: 160px;">Descrição</td>
+                    <td style="padding: 10px 0;" th:text="${corrida.descricao != null ? corrida.descricao : '—'}"></td>
+                </tr>
+                <tr style="border-top: 1px solid #e0e0e0;">
+                    <td style="padding: 10px 0; font-weight: bold; color: #2e7d32;">Tempo limite</td>
+                    <td style="padding: 10px 0;" th:text="${corrida.tempoSegundos} + ' segundos'"></td>
+                </tr>
+                <tr style="border-top: 1px solid #e0e0e0;">
+                    <td style="padding: 10px 0; font-weight: bold; color: #2e7d32;">Status</td>
+                    <td style="padding: 10px 0;">
+                        <span class="badge badge-ativa"   th:if="${corrida.ativa}">Ativa</span>
+                        <span class="badge badge-inativa"  th:unless="${corrida.ativa}">Inativa</span>
+                    </td>
+                </tr>
+                <tr style="border-top: 1px solid #e0e0e0;">
+                    <td style="padding: 10px 0; font-weight: bold; color: #2e7d32;">Perguntas</td>
+                    <td style="padding: 10px 0;"
+                        th:text="${corrida.perguntas != null ? #lists.size(corrida.perguntas) : 0} + ' pergunta(s)'"></td>
+                </tr>
+            </tbody>
+        </table>
+ 
+    </div>
+ 
+    <!-- Lista de perguntas vinculadas -->
+    <h2 style="color:#2e7d32; font-size:18px; margin-bottom:16px;">Perguntas desta corrida</h2>
+ 
+    <div th:if="${corrida.perguntas == null or #lists.isEmpty(corrida.perguntas)}">
+        <p class="mensagem-erro">Nenhuma pergunta cadastrada para esta corrida.</p>
+        <a class="btn btn-primary" th:href="@{/perguntas/form(corridaId=${corrida.id})}">
+            + Cadastrar Perguntas
+        </a>
+    </div>
+ 
+    <div th:unless="${corrida.perguntas == null or #lists.isEmpty(corrida.perguntas)}">
+        <div th:each="p, stat : ${corrida.perguntas}"
+             style="background:#fff; border-radius:8px; border:1px solid #c8e6c9; padding:16px; margin-bottom:12px;">
+ 
+            <p style="font-weight:bold; margin-bottom:8px; color:#1a1a1a;">
+                <span th:text="${stat.count} + '. '"></span>
+                <span th:text="${p.enunciado}"></span>
+            </p>
+ 
+            <ul style="padding-left:20px; margin-bottom:8px;">
+                <li th:each="alt, altStat : ${p.alternativas}"
+                    th:style="${altStat.index == p.respostaCorreta} ? 'color:#2e7d32; font-weight:bold;' : 'color:#555;'">
+                    <span th:text="${altStat.index == 0 ? 'A' : altStat.index == 1 ? 'B' : altStat.index == 2 ? 'C' : 'D'}"></span>)
+                    <span th:text="${alt}"></span>
+                    <span th:if="${altStat.index == p.respostaCorreta}"> ✓</span>
+                </li>
+            </ul>
+        </div>
+ 
+        <a class="btn btn-secondary" th:href="@{/perguntas/form(corridaId=${corrida.id})}"
+           style="margin-top: 4px; display: inline-block;">
+            + Adicionar Pergunta
+        </a>
+    </div>
+ 
+    <!-- Ações -->
+    <div class="acoes mt-md">
+        <a class="btn btn-primary" th:href="@{/corridas/{id}/editar(id=${corrida.id})}">Editar Corrida</a>
+        <a class="btn-link" th:href="@{/corridas}">← Voltar à lista</a>
+    </div>
+ 
+</body>
+</html>
