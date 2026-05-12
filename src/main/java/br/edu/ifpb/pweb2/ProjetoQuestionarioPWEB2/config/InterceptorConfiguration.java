@@ -1,11 +1,12 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.config;
 
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.interceptor.RotasAdministradorInterceptor;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.interceptor.SessaoInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.interceptor.RotasAdministradorInterceptor;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.interceptor.SessaoInterceptor;
 
 @Configuration
 public class InterceptorConfiguration implements WebMvcConfigurer {
