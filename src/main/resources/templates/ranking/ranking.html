@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/mainlayout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking</title>
+    <style>
+        .ranking-container {
+            max-width: 860px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .ranking-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .ranking-titulo {
+            color: #2e7d32;
+            font-size: 26px;
+            margin: 0;
+        }
+
+        .ranking-subtitulo {
+            color: #777;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+        .btn-voltar {
+            color: #2e7d32;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid #a5d6a7;
+            border-radius: 6px;
+        }
+
+        .btn-voltar:hover {
+            background: #e8f5e9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+        }
+
+        thead {
+            background: #2e7d32;
+            color: white;
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* UC09: destaque do participante logado */
+        tr.linha-destaque td {
+            background: #e8f5e9;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
+        .posicao {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 16px;
+        }
+
+        .posicao-ouro   { color: #f9a825; }
+        .posicao-prata  { color: #9e9e9e; }
+        .posicao-bronze { color: #a1887f; }
+
+        .badge-voce {
+            background: #2e7d32;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 11px;
+            margin-left: 6px;
+        }
+
+        .sem-resultados {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+        }
+
+        .sem-resultados p {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<main layout:fragment="conteudo">
+    <div class="ranking-container">
+
+        <div class="ranking-header">
+            <div>
+                <h1 class="ranking-titulo"
+                    th:text="${corridaFiltro != null} ? '🏅 Ranking — ' + ${corridaFiltro.titulo} : '🏅 Ranking Geral'">
+                    Ranking
+                </h1>
+                <p class="ranking-subtitulo"
+                   th:text="${corridaFiltro != null}
+                       ? 'Melhores pontuações desta corrida'
+                       : 'Melhores pontuações de todas as corridas'">
+                </p>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a class="btn-voltar" th:href="@{/ranking}"
+                   th:if="${corridaFiltro != null}">Ranking Geral</a>
+                <a class="btn-voltar" th:href="@{/lobby}">← Lobby</a>
+            </div>
+        </div>
+
+        <!-- Nenhum resultado -->
+        <div class="sem-resultados" th:if="${#lists.isEmpty(resultados)}">
+            <p>Nenhuma pontuação registrada ainda.</p>
+            <small>Seja o primeiro a completar uma corrida!</small>
+        </div>
+
+        <!-- Tabela de ranking -->
+        <table th:unless="${#lists.isEmpty(resultados)}">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Participante</th>
+                    <th th:if="${corridaFiltro == null}">Corrida</th>
+                    <th>Pontuação</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r, stat : ${resultados}"
+                    th:classappend="${r.participante.id == participanteLogadoId} ? 'linha-destaque' : ''">
+
+                    <!-- Posição com medalhas para o pódio -->
+                    <td class="posicao"
+                        th:classappend="${stat.count == 1} ? 'posicao-ouro' : (${stat.count == 2} ? 'posicao-prata' : (${stat.count == 3} ? 'posicao-bronze' : ''))">
+                        <span th:text="${stat.count == 1} ? '🥇' : (${stat.count == 2} ? '🥈' : (${stat.count == 3} ? '🥉' : stat.count))"></span>
+                    </td>
+
+                    <!-- Nome + badge "Você" se for o participante logado -->
+                    <td>
+                        <span th:text="${r.participante.nome}"></span>
+                        <span class="badge-voce"
+                              th:if="${r.participante.id == participanteLogadoId}">Você</span>
+                    </td>
+
+                    <!-- Corrida (só no ranking geral) -->
+                    <td th:if="${corridaFiltro == null}" th:text="${r.corrida.titulo}"></td>
+
+                    <!-- Pontuação -->
+                    <td th:text="${#numbers.formatDecimal(r.pontuacao, 1, 1)}"></td>
+
+                    <!-- Data -->
+                    <td th:text="${#temporals.format(r.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- UC09: aviso se o participante logado não tem pontuação -->
+        <p style="margin-top:20px; color:#888; font-size:13px; text-align:center;"
+           th:if="${!#lists.isEmpty(resultados) and !participanteTemPontuacao}">
+            Você ainda não possui pontuação neste ranking. Complete uma corrida para aparecer aqui!
+        </p>
+
+    </div>
+</main>
+
+</html>

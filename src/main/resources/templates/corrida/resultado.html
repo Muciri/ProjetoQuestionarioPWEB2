@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/mainlayout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado da Corrida</title>
+    <style>
+        .resultado-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .resultado-card {
+            background: #fff;
+            border: 1px solid #c8e6c9;
+            border-radius: 12px;
+            padding: 40px 36px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .resultado-icone {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+
+        .resultado-titulo {
+            color: #2e7d32;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .resultado-titulo.expirou {
+            color: #c62828;
+        }
+
+        .resultado-mensagem {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .resultado-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 36px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-valor {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .stat-valor.expirou {
+            color: #c62828;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .divisor {
+            border: none;
+            border-top: 1px solid #e8f5e9;
+            margin: 0 0 28px;
+        }
+
+        .resultado-acoes {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-ranking {
+            background: #2e7d32;
+            color: white;
+            text-decoration: none;
+            padding: 12px 32px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-ranking:hover {
+            background: #1b5e20;
+        }
+
+        .btn-lobby {
+            color: #2e7d32;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-lobby:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<main layout:fragment="conteudo">
+    <div class="resultado-container">
+        <div class="resultado-card">
+
+            <!-- Ícone e título dinâmico -->
+            <div class="resultado-icone" th:text="${expirou} ? '⏰' : '🏆'"></div>
+
+            <h1 class="resultado-titulo"
+                th:classappend="${expirou} ? 'expirou' : ''"
+                th:text="${expirou} ? 'Tempo Esgotado!' : 'Corrida Concluída!'">
+            </h1>
+
+            <p class="resultado-mensagem" th:text="${mensagem}"></p>
+
+            <hr class="divisor">
+
+            <!-- Estatísticas -->
+            <div class="resultado-stats">
+                <div class="stat-item">
+                    <span class="stat-valor"
+                          th:classappend="${expirou} ? 'expirou' : ''"
+                          th:text="${pontuacao}">0</span>
+                    <span class="stat-label">pontos</span>
+                </div>
+
+                <div class="stat-item" th:if="${acertos != null}">
+                    <span class="stat-valor" th:text="${acertos} + '/' + ${totalPerguntas}">0/0</span>
+                    <span class="stat-label">acertos</span>
+                </div>
+
+                <div class="stat-item">
+                    <span class="stat-valor" th:text="${corrida.tempoSegundos} + 's'">0s</span>
+                    <span class="stat-label">tempo da corrida</span>
+                </div>
+            </div>
+
+            <hr class="divisor">
+
+            <!-- Ações -->
+            <div class="resultado-acoes">
+                <a class="btn-ranking" th:href="@{/ranking/{id}(id=${corrida.id})}">
+                    Ver Ranking desta Corrida
+                </a>
+                <a class="btn-ranking" th:href="@{/ranking}"
+                   style="background:#388e3c;">
+                    Ver Ranking Geral
+                </a>
+                <a class="btn-lobby" th:href="@{/lobby}">← Voltar ao Lobby</a>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+</html>

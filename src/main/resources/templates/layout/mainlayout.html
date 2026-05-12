@@ -68,8 +68,13 @@
             <nav class="header-nav">
                 <a th:href="@{/}">Início</a>
 
-                <!-- galera, tem que adicionar aqui outros links do participante comum tipo "visualizar corridas"-->
+                <!-- Links para participantes logados -->
+                <span th:if="${session.participante != null}">
+                    <a th:href="@{/lobby}">Lobby</a>
+                    <a th:href="@{/ranking}">Ranking</a>
+                </span>
 
+                <!-- Links exclusivos de admin -->
                 <span th:if="${session.participante != null and session.participante.admin == true}">
                     <a th:href="@{/perguntas}">Gerenciar Perguntas</a>
                     <a th:href="@{/corridas}">Gerenciar Corridas</a>

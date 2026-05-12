@@ -1,0 +1,153 @@
+package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.views;
+
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaInvalidaException;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaNaoEncontradaException;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Participante;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Resultado;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.ResultadoService;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.SessaoCorridaService;
+import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.math.BigDecimal;
+
+/**
+ * UC08 (parcial): iniciar corrida + persistir resultado.
+ *
+ * Fluxo (POST-Redirect-GET, conforme slide "Spring MVC - Redirect e Flash"):
+ *   1. Participante clica em "Iniciar" no lobby → GET /corrida/{id}/iniciar
+ *   2. Este controlador valida e salva a corrida na sessão (Backlog 13, 14)
+ *   3. Redireciona para o fluxo de perguntas do Felipe
+ *   4. Ao final (ou timeout), Felipe redireciona para GET /corrida/{id}/resultado
+ *   5. Este controlador persiste o Resultado e mostra a tela final (Backlog 21)
+ */
+@Controller
+@RequestMapping("/corrida")
+public class CorridaExecucaoController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CorridaExecucaoController.class);
+
+    private final CorridaService corridaService;
+    private final SessaoCorridaService sessaoCorridaService;
+    private final ResultadoService resultadoService;
+
+    public CorridaExecucaoController(CorridaService corridaService,
+                                     SessaoCorridaService sessaoCorridaService,
+                                     ResultadoService resultadoService) {
+        this.corridaService = corridaService;
+        this.sessaoCorridaService = sessaoCorridaService;
+        this.resultadoService = resultadoService;
+    }
+
+    // Backlog 13 + 14: valida corrida, salva timestamp na sessão, redireciona
+    @GetMapping("/{id}/iniciar")
+    public String iniciar(@PathVariable Long id, HttpSession session, RedirectAttributes flash) {
+
+        // RN07: bloqueia se já há corrida em andamento
+        if (sessaoCorridaService.corridaAtiva(session) != null) {
+            flash.addFlashAttribute("aviso",
+                    "Corrida já começou! Termine a corrida atual antes de iniciar outra.");
+            return "redirect:/lobby";
+        }
+
+        Corrida corrida = buscarCorridaOuFalhar(id);
+
+        // RN03: corrida sem perguntas ou inválida não pode iniciar
+        if (!corridaService.corridaValida(corrida)) {
+            throw new CorridaInvalidaException(
+                    "A corrida \"" + corrida.getTitulo() + "\" não pode ser iniciada (sem perguntas ou tempo inválido).");
+        }
+
+        sessaoCorridaService.iniciarCorrida(session, corrida);
+        logger.info("Corrida {} iniciada para participante {}",
+                corrida.getId(), getParticipante(session).getNome());
+
+        return "redirect:/corrida/" + id + "/pergunta/0";
+    }
+
+    // Tela de resultado — Felipe redireciona aqui após última pergunta ou timeout
+    @GetMapping("/{id}/resultado")
+    public String resultado(@PathVariable Long id, HttpSession session, Model model) {
+        Participante participante = getParticipante(session);
+        Corrida corrida = buscarCorridaOuFalhar(id);
+
+        Corrida corridaAtual = sessaoCorridaService.corridaAtiva(session);
+        boolean chegadaNormal = corridaAtual != null && corridaAtual.getId().equals(id);
+
+        if (chegadaNormal) {
+            preencherResultadoNovo(model, session, participante, corrida);
+        } else {
+            // Refresh ou acesso direto — busca resultado anterior na base
+            return preencherResultadoExistente(model, participante, corrida);
+        }
+
+        return "corrida/resultado";
+    }
+
+    // Métodos privados auxiliares (separação de responsabilidades)
+
+    private Corrida buscarCorridaOuFalhar(Long id) {
+        try {
+            return corridaService.buscarPorId(id);
+        } catch (RuntimeException ex) {
+            throw new CorridaNaoEncontradaException("Corrida com id " + id + " não encontrada.");
+        }
+    }
+
+    private Participante getParticipante(HttpSession session) {
+        return (Participante) session.getAttribute("participante");
+    }
+
+    private void preencherResultadoNovo(Model model, HttpSession session,
+                                         Participante participante, Corrida corrida) {
+        int acertos = sessaoCorridaService.getAcertos(session);
+        long tempoRestante = sessaoCorridaService.tempoRestante(session);
+        boolean expirou = tempoRestante == 0;
+
+        // Backlog 21 / RN02: salva resultado (retorna null se já existe)
+        Resultado resultado = resultadoService.salvarResultado(participante, corrida, acertos, tempoRestante);
+        sessaoCorridaService.encerrarCorrida(session);
+
+        BigDecimal pontuacao = resultado != null
+                ? resultado.getPontuacao()
+                : resultadoService.buscarUltimo(participante, corrida)
+                                  .map(Resultado::getPontuacao)
+                                  .orElse(BigDecimal.ZERO);
+
+        logger.info("Resultado registrado — participante: {}, corrida: {}, pontuação: {}, expirou: {}",
+                participante.getNome(), corrida.getTitulo(), pontuacao, expirou);
+
+        model.addAttribute("corrida", corrida);
+        model.addAttribute("acertos", acertos);
+        model.addAttribute("totalPerguntas", corrida.getPerguntas().size());
+        model.addAttribute("pontuacao", pontuacao);
+        model.addAttribute("expirou", expirou);
+        model.addAttribute("mensagem", expirou
+                ? "Tempo esgotado! Você marcou " + pontuacao + " ponto(s)."
+                : "Parabéns! Você marcou " + pontuacao + " ponto(s)!");
+    }
+
+    private String preencherResultadoExistente(Model model, Participante participante, Corrida corrida) {
+        return resultadoService.buscarUltimo(participante, corrida)
+                .map(r -> {
+                    model.addAttribute("corrida", corrida);
+                    model.addAttribute("pontuacao", r.getPontuacao());
+                    model.addAttribute("acertos", null);
+                    model.addAttribute("totalPerguntas", corrida.getPerguntas().size());
+                    model.addAttribute("expirou", false);
+                    model.addAttribute("mensagem",
+                            "Resultado da sua participação anterior: " + r.getPontuacao() + " ponto(s).");
+                    return "corrida/resultado";
+                })
+                .orElse("redirect:/lobby");
+    }
+}
