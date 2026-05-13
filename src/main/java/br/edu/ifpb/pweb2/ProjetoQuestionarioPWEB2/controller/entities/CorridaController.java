@@ -100,7 +100,7 @@ public class CorridaController {
     @GetMapping("/{id}/pos-cadastro")
     public String posCadastro(@PathVariable Long id, Model model) {
         model.addAttribute("corrida", service.buscarPorId(id));
-        return "corridas/pos-Cadastro"; // Corrigir aqui, pois era pos-cadastro, o correto é posCadastro
+        return "corridas/posCadastro"; // Corrigir aqui, pois era pos-cadastro, o correto é posCadastro
     }
 
     // -------------------------------------------------------
