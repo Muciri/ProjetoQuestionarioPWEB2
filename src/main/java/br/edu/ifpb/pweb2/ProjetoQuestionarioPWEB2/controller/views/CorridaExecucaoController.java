@@ -1,14 +1,8 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.views;
 
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaInvalidaException;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaNaoEncontradaException;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Participante;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Resultado;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.ResultadoService;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.SessaoCorridaService;
-import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -18,7 +12,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaInvalidaException;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaNaoEncontradaException;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Participante;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Pergunta;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Resultado;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.ResultadoService;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.SessaoCorridaService;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * UC08 (parcial): iniciar corrida + persistir resultado.
@@ -73,6 +76,51 @@ public class CorridaExecucaoController {
 
         return "redirect:/corrida/" + id + "/pergunta/0";
     }
+
+    @GetMapping("/{id}/pergunta/{indice}")
+    public String exibirPergunta(@PathVariable Long id,
+                             @PathVariable int indice,
+                             HttpSession session,
+                             Model model,
+                             RedirectAttributes flash) {
+
+    Corrida corrida = buscarCorridaOuFalhar(id);
+
+    Corrida corridaAtiva = sessaoCorridaService.corridaAtiva(session);
+
+    if (corridaAtiva == null || !corridaAtiva.getId().equals(id)) {
+        flash.addFlashAttribute("erro", "Você precisa iniciar uma corrida primeiro.");
+        return "redirect:/lobby";
+    }
+
+    if (sessaoCorridaService.tempoRestante(session) == 0) {
+        flash.addFlashAttribute("aviso", "Tempo esgotado!");
+        return "redirect:/corrida/" + id + "/resultado";
+    }
+
+    List<Pergunta> perguntas = corrida.getPerguntas();
+
+    if (perguntas == null || perguntas.isEmpty()) {
+        flash.addFlashAttribute("erro", "Essa corrida não possui perguntas cadastradas.");
+        return "redirect:/lobby";
+    }
+
+    if (indice < 0 || indice >= perguntas.size()) {
+        return "redirect:/corrida/" + id + "/resultado";
+    }
+
+    Pergunta perguntaAtual = perguntas.get(indice);
+
+    model.addAttribute("corrida", corrida);
+    model.addAttribute("pergunta", perguntaAtual);
+    model.addAttribute("indiceAtual", indice);
+    model.addAttribute("totalPerguntas", perguntas.size());
+    model.addAttribute("tempoRestante", sessaoCorridaService.tempoRestante(session));
+
+    return "corrida/pergunta";
+}
+
+
 
     // Tela de resultado — Felipe redireciona aqui após última pergunta ou timeout
     @GetMapping("/{id}/resultado")
