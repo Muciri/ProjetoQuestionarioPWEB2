@@ -22,7 +22,7 @@
             border-radius: 8px;
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            width: 600px;
+            width: 700px;
         }
 
         h1 {
@@ -45,14 +45,36 @@
 
         .admin-actions {
             margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .btn-nova {
+        .btn-nova, .btn-filtrar, .btn-limpar {
             background: #3fa14c;
             color: white;
             padding: 10px 15px;
             text-decoration: none;
             border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .filtro-form {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filtro-form select {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            min-width: 220px;
         }
 
         .pergunta {
@@ -85,6 +107,12 @@
         .excluir {
             color: red;
         }
+
+        .info-corrida {
+            font-size: 0.95rem;
+            color: #666;
+            margin-top: 5px;
+        }
     </style>
 </head>
 
@@ -96,6 +124,20 @@
             <p th:text="${mensagem}" class="mensagem"></p>
             <p th:text="${erro}" class="erro"></p>
 
+            <form th:action="@{/perguntas}" method="get" class="filtro-form">
+                <select name="corridaId">
+                    <option value="">Todas as corridas</option>
+                    <option th:each="corrida : ${corridas}"
+                            th:value="${corrida.id}"
+                            th:text="${corrida.titulo}"
+                            th:selected="${corridaIdSelecionada != null and corridaIdSelecionada == corrida.id}">
+                    </option>
+                </select>
+
+                <button type="submit" class="btn-filtrar">Filtrar</button>
+                <a th:href="@{/perguntas}" class="btn-limpar">Limpar</a>
+            </form>
+
             <div class="admin-actions">
                 <a th:href="@{/perguntas/form}" class="btn-nova">+ Nova Pergunta</a>
             </div>
@@ -106,6 +148,11 @@
 
             <div th:each="pergunta : ${perguntas}" class="pergunta">
                 <strong th:text="${pergunta.enunciado}"></strong>
+
+                <p class="info-corrida">
+                    <strong>Corrida:</strong>
+                    <span th:text="${pergunta.corrida.titulo}"></span>
+                </p>
 
                 <ul class="alternativas">
                     <li th:each="alt, iterStat : ${pergunta.alternativas}"

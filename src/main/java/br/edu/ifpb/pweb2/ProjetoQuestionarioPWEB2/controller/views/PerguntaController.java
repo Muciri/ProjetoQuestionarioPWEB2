@@ -20,12 +20,23 @@ public class PerguntaController {
         this.perguntaRepository = perguntaRepository;
         this.perguntaService = perguntaService;
     }
-    
+
     @GetMapping("")
-    public ModelAndView listarPerguntas(ModelAndView model, RedirectAttributes redirectAttributes) {
+    public ModelAndView listarPerguntas(
+            @RequestParam(value = "corridaId", required = false) Long corridaId,
+            ModelAndView model,
+            RedirectAttributes redirectAttributes) {
+
         model.setViewName("perguntas/listaPerguntas");
         model.addObject("titulo", "Lista de Perguntas");
-        model.addObject("perguntas", perguntaService.getPerguntas());
+        model.addObject("corridas", perguntaService.getCorridas());
+        model.addObject("corridaIdSelecionada", corridaId);
+
+        if (corridaId != null) {
+            model.addObject("perguntas", perguntaService.getPerguntasPorCorrida(corridaId));
+        } else {
+            model.addObject("perguntas", perguntaService.getPerguntas());
+        }
 
         return model;
     }

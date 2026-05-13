@@ -66,6 +66,7 @@
             <h2 th:text="${titulo}">Formulário</h2>
 
             <form th:action="@{/perguntas/salvar}" th:object="${pergunta}" method="post">
+                <input type="hidden" th:field="*{id}" />
 
                 <div class="form-group">
                     <label>Enunciado:</label>

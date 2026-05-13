@@ -1,6 +1,8 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service;
 
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Pergunta;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.CorridaRepository;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.PerguntaRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,13 +11,22 @@ import java.util.List;
 @Service
 public class PerguntaService {
     private PerguntaRepository perguntaRepository;
+    private CorridaRepository corridaRepository;
 
-    public PerguntaService(PerguntaRepository perguntaRepository) {
+    public PerguntaService(PerguntaRepository perguntaRepository, CorridaRepository corridaRepository) {
         this.perguntaRepository = perguntaRepository;
+        this.corridaRepository = corridaRepository;
     }
 
     public List<Pergunta> getPerguntas() {
         return this.perguntaRepository.findAll();
+    }
+    public List<Pergunta> getPerguntasPorCorrida(Long corridaId) {
+        return perguntaRepository.findByCorridaId(corridaId);
+    }
+
+    public List<Corrida> getCorridas() {
+        return corridaRepository.findAll();
     }
 
     public Pergunta getPerguntaById(Long id) {
