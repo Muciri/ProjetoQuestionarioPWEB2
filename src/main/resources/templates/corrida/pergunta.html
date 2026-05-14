@@ -153,7 +153,7 @@
 
                 <div class="info-card">
                     <strong>Tempo restante:</strong>
-                    <span th:text="${tempoRestante}">60</span>
+                    <span id="contador-tempo" th:text="${tempoRestante}">60</span>
                     segundos
                 </div>
             </div>
@@ -188,6 +188,29 @@
 
         </div>
     </div>
+
+    <script th:inline="javascript">
+    let tempoRestante = /*[[${tempoRestante}]]*/ 0;
+    const contador = document.getElementById("contador-tempo");
+
+    const intervalo = setInterval(function () {
+        tempoRestante--;
+
+        if (tempoRestante <= 10) {
+            contador.style.color = "red";
+            contador.style.fontWeight = "bold";
+        }
+
+        if (tempoRestante <= 0) {
+            contador.textContent = "0";
+            clearInterval(intervalo);
+
+            window.location.href = /*[[@{/corrida/{id}/resultado(id=${corrida.id})}]]*/ "";
+        } else {
+            contador.textContent = tempoRestante;
+        }
+    }, 1000);
+</script> 
 
 </main>
 </html>
