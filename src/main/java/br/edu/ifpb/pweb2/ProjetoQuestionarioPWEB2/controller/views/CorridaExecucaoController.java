@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaInvalidaException;
@@ -120,6 +122,47 @@ public class CorridaExecucaoController {
     return "corrida/pergunta";
 }
 
+    @PostMapping("/{id}/responder")
+    public String responderPergunta(@PathVariable Long id, @RequestParam("respostaSelecionada") Integer respostaSelecionada, HttpSession session, RedirectAttributes flash){
+             
+        Corrida corrida = buscarCorridaOuFalhar(id);
+        Corrida corridaAtiva = sessaoCorridaService.corridaAtiva(session);
+
+        if (corridaAtiva == null || !corridaAtiva.getId().equals(id)) {
+            flash.addFlashAttribute("erro", "Você precisa iniciar uma corrida primeiro.");
+            return "redirect:/lobby";
+        }
+
+        if (sessaoCorridaService.tempoRestante(session) == 0) {
+            flash.addFlashAttribute("aviso", "Tempo esgotado!");
+            return "redirect:/corrida/" + id + "/resultado";
+        }
+
+        int indiceAtual = sessaoCorridaService.getIndicePergunta(session);
+        List<Pergunta> perguntas = corrida.getPerguntas();
+
+        if (perguntas == null || perguntas.isEmpty() || indiceAtual >= perguntas.size()){
+            return "redirect:/corrida/" + id + "/resultado";
+        }
+        
+        Pergunta perguntaAtual = perguntas.get(indiceAtual);
+
+        if(respostaSelecionada.equals(perguntaAtual.getRespostaCorreta())){
+            sessaoCorridaService.incrementarAcertos(session);
+            flash.addFlashAttribute("mensagem", "Resposta correta!");
+        }else{
+            flash.addFlashAttribute("erro", "Resposta incorreta!");
+        }
+
+        sessaoCorridaService.avancarPergunta(session);
+        int proximoIndice = sessaoCorridaService.getIndicePergunta(session);
+
+        if(proximoIndice >= perguntas.size()){
+            flash.addFlashAttribute("mensagem", "Corrida finalizada!!");
+            return "redirect:/corrida/" + id + "/resultado";
+        }
+        return "redirect:/corrida/" + id + "/pergunta/" + proximoIndice;
+    }
 
 
     // Tela de resultado — Felipe redireciona aqui após última pergunta ou timeout
