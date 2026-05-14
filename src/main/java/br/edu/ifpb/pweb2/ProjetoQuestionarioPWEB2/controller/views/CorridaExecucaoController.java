@@ -95,6 +95,12 @@ public class CorridaExecucaoController {
         return "redirect:/lobby";
     }
 
+    int indiceSessao = sessaoCorridaService.getIndicePergunta(session);
+
+    if (indice != indiceSessao){
+        return "redirect:/corrida/" + id + "/pergunta/" + indiceSessao;
+    }
+
     if (sessaoCorridaService.tempoRestante(session) == 0) {
         flash.addFlashAttribute("aviso", "Tempo esgotado!");
         return "redirect:/corrida/" + id + "/resultado";
@@ -107,15 +113,16 @@ public class CorridaExecucaoController {
         return "redirect:/lobby";
     }
 
-    if (indice < 0 || indice >= perguntas.size()) {
+     if (indiceSessao < 0 || indiceSessao >= perguntas.size()) {
         return "redirect:/corrida/" + id + "/resultado";
     }
 
-    Pergunta perguntaAtual = perguntas.get(indice);
+
+    Pergunta perguntaAtual = perguntas.get(indiceSessao);
 
     model.addAttribute("corrida", corrida);
     model.addAttribute("pergunta", perguntaAtual);
-    model.addAttribute("indiceAtual", indice);
+    model.addAttribute("indiceAtual", indiceSessao);
     model.addAttribute("totalPerguntas", perguntas.size());
     model.addAttribute("tempoRestante", sessaoCorridaService.tempoRestante(session));
 

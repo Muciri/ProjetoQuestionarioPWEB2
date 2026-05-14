@@ -165,7 +165,7 @@
                     <!-- Posição com medalhas para o pódio -->
                     <td class="posicao"
                         th:classappend="${stat.count == 1} ? 'posicao-ouro' : (${stat.count == 2} ? 'posicao-prata' : (${stat.count == 3} ? 'posicao-bronze' : ''))">
-                        <span th:text="${stat.count == 1} ? '🥇' : (${stat.count == 2} ? '🥈' : (${stat.count == 3} ? '🥉' : stat.count))"></span>
+                        <span th:text="${stat.count == 1} ? '🥇' : (${stat.count == 2} ? '🥈' : (${stat.count == 3} ? '🥉' : (${stat.count})))"></span>
                     </td>
 
                     <!-- Nome + badge "Você" se for o participante logado -->
