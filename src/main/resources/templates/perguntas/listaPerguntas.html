@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="pt-br"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/mainlayout}">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/mainlayout}">
 
 <head>
     <meta charset="UTF-8">
@@ -21,7 +19,7 @@
             padding: 30px 40px;
             border-radius: 8px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             width: 700px;
         }
 
@@ -51,7 +49,9 @@
             flex-wrap: wrap;
         }
 
-        .btn-nova, .btn-filtrar, .btn-limpar {
+        .btn-nova,
+        .btn-filtrar,
+        .btn-limpar {
             background: #3fa14c;
             color: white;
             padding: 10px 15px;
@@ -127,10 +127,8 @@
             <form th:action="@{/perguntas}" method="get" class="filtro-form">
                 <select name="corridaId">
                     <option value="">Todas as corridas</option>
-                    <option th:each="corrida : ${corridas}"
-                            th:value="${corrida.id}"
-                            th:text="${corrida.titulo}"
-                            th:selected="${corridaIdSelecionada != null and corridaIdSelecionada == corrida.id}">
+                    <option th:each="corrida : ${corridas}" th:value="${corrida.id}" th:text="${corrida.titulo}"
+                        th:selected="${corridaIdSelecionada != null and corridaIdSelecionada == corrida.id}">
                     </option>
                 </select>
 
@@ -154,9 +152,13 @@
                     <span th:text="${pergunta.corrida.titulo}"></span>
                 </p>
 
+                <p>
+                    <strong>Pontos:</strong>
+                    <span th:text="${pergunta.pontos}">1</span>
+                </p>
+
                 <ul class="alternativas">
-                    <li th:each="alt, iterStat : ${pergunta.alternativas}"
-                        th:text="${iterStat.index} + ' - ' + ${alt}">
+                    <li th:each="alt, iterStat : ${pergunta.alternativas}" th:text="${iterStat.index} + ' - ' + ${alt}">
                     </li>
                 </ul>
 
@@ -167,9 +169,8 @@
 
                 <div class="acoes-pergunta">
                     <a th:href="@{/perguntas/editar/{id}(id=${pergunta.id})}" class="editar">Editar</a>
-                    <a th:href="@{/perguntas/excluir/{id}(id=${pergunta.id})}"
-                       class="excluir"
-                       onclick="return confirm('Tem certeza que deseja excluir?')">
+                    <a th:href="@{/perguntas/excluir/{id}(id=${pergunta.id})}" class="excluir"
+                        onclick="return confirm('Tem certeza que deseja excluir?')">
                         Excluir
                     </a>
                 </div>

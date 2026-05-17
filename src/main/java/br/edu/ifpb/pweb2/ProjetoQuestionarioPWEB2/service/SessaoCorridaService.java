@@ -16,6 +16,7 @@ public class SessaoCorridaService {
     public static final String KEY_INICIO    = "corridaInicio";
     public static final String KEY_ACERTOS   = "corridaAcertos";
     public static final String KEY_INDICE    = "corridaIndicePergunta";
+    public static final String KEY_PONTUACAO = "corridaPontuacao";
 
     // Felipe tu vai controlar a corrida ativa, tempo restante, acertos e índice da pergunta atual na sessão do usuário. 
     // Eu fiz essa classe para centralizar toda a lógica de controle da corrida na sessão, 
@@ -26,6 +27,7 @@ public class SessaoCorridaService {
         session.setAttribute(KEY_INICIO,  LocalDateTime.now());
         session.setAttribute(KEY_ACERTOS, 0);
         session.setAttribute(KEY_INDICE,  0);
+        session.setAttribute(KEY_PONTUACAO, 0);
     }
 
     public Corrida corridaAtiva(HttpSession session) {
@@ -45,6 +47,7 @@ public class SessaoCorridaService {
         session.removeAttribute(KEY_INICIO);
         session.removeAttribute(KEY_ACERTOS);
         session.removeAttribute(KEY_INDICE);
+        session.removeAttribute(KEY_PONTUACAO);
     }
 
 
@@ -55,6 +58,17 @@ public class SessaoCorridaService {
 
     public void incrementarAcertos(HttpSession session) {
         session.setAttribute(KEY_ACERTOS, getAcertos(session) + 1);
+    }
+
+    public int getPontuacao(HttpSession session) {
+        Object valor = session.getAttribute(KEY_PONTUACAO);
+        return valor == null ? 0 : (int) valor;
+    }
+
+    public void somarPontuacao(HttpSession session, Integer pontos) {
+        int pontosDaPergunta = pontos == null ? 0 : pontos;
+        int pontuacaoAtual = getPontuacao(session);
+        session.setAttribute(KEY_PONTUACAO, pontuacaoAtual + pontosDaPergunta);
     }
 
     // --- Índice da pergunta atual (Felipe controla) ---

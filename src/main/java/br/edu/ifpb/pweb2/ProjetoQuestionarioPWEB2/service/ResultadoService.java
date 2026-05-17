@@ -32,15 +32,14 @@ public class ResultadoService {
      * RN01
      * RN02
      */
-    public Resultado salvarResultado(Participante participante, Corrida corrida,
-                                     int acertos, long tempoRestante) {
+    public Resultado salvarResultado(Participante participante, Corrida corrida, int pontuacaoFinal) {
         if (resultadoRepository.existsByParticipanteAndCorrida(participante, corrida)) {
             logger.info("Resultado já existente para participante {} na corrida {} — não persistido (RN02)",
                     participante.getId(), corrida.getId());
             return null;
         }
 
-        BigDecimal pontuacao = calcularPontuacao(acertos, tempoRestante);
+        BigDecimal pontuacao = BigDecimal.valueOf(pontuacaoFinal);
 
         Resultado resultado = new Resultado();
         resultado.setParticipante(participante);
@@ -52,11 +51,6 @@ public class ResultadoService {
         logger.info("Resultado salvo — id: {}, participante: {}, corrida: {}, pontuação: {}",
                 salvo.getId(), participante.getNome(), corrida.getTitulo(), pontuacao);
         return salvo;
-    }
-
-    /** RN01: fórmula de pontuação acordada com Felipe */
-    private BigDecimal calcularPontuacao(int acertos, long tempoRestante) {
-        return BigDecimal.valueOf(acertos + tempoRestante / 10.0);
     }
 
     public boolean resultadoExiste(Participante participante, Corrida corrida) {

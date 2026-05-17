@@ -156,6 +156,7 @@ public class CorridaExecucaoController {
 
         if(respostaSelecionada.equals(perguntaAtual.getRespostaCorreta())){
             sessaoCorridaService.incrementarAcertos(session);
+            sessaoCorridaService.somarPontuacao(session, perguntaAtual.getPontos());
             flash.addFlashAttribute("mensagem", "Resposta correta!");
         }else{
             flash.addFlashAttribute("erro", "Resposta incorreta!");
@@ -208,11 +209,12 @@ public class CorridaExecucaoController {
     private void preencherResultadoNovo(Model model, HttpSession session,
                                          Participante participante, Corrida corrida) {
         int acertos = sessaoCorridaService.getAcertos(session);
+        int pontuacaoFinal = sessaoCorridaService.getPontuacao(session);
         long tempoRestante = sessaoCorridaService.tempoRestante(session);
         boolean expirou = tempoRestante == 0;
 
         // Backlog 21 / RN02: salva resultado (retorna null se já existe)
-        Resultado resultado = resultadoService.salvarResultado(participante, corrida, acertos, tempoRestante);
+        Resultado resultado = resultadoService.salvarResultado(participante, corrida, pontuacaoFinal);
         sessaoCorridaService.encerrarCorrida(session);
 
         BigDecimal pontuacao = resultado != null
