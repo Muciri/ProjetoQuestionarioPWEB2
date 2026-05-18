@@ -70,15 +70,21 @@ public class CorridaController {
             return "corridas/form";
         }
 
-        boolean isNova = (corrida.getId() == null);
-        Corrida salva = service.salvar(corrida);
+        boolean semPerguntas = true;
 
+        if(corrida.getId() != null){
+            Corrida banco = service.buscarPorId(corrida.getId());
+            semPerguntas = banco.getPerguntas() == null || banco.getPerguntas().isEmpty();
+        }
 
         // essa condicional vai negar a permissão de ativar a corrida sem perguntas
-        if(Boolean.TRUE.equals(corrida.getAtiva()) && (corrida.getPerguntas() == null || corrida.getPerguntas().isEmpty())){
+        if(Boolean.TRUE.equals(corrida.getAtiva()) && semPerguntas){
             corrida.setAtiva(false);
             flash.addFlashAttribute("aviso", "A corrida foi salva como INATIVA/Falsa pois ela ainda não possui perguntas. Por favor, cadastre as perguntas para ativar");
         }
+
+        boolean isNova = (corrida.getId() == null);
+        Corrida salva = service.salvar(corrida); // coloque isso para salvar dps da validação
         if (isNova) {
             // UC01: após cadastro, pergunt
             // a se quer cadastrar perguntas
