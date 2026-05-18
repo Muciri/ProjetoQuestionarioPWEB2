@@ -1,7 +1,9 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.views;
 
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Pergunta;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.PerguntaRepository;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.PerguntaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PerguntaController {
     private final PerguntaRepository perguntaRepository;
     private final PerguntaService perguntaService;
+    
+    
+    @Autowired
+    private CorridaService corridaService;
 
     @Autowired
     public PerguntaController(PerguntaRepository perguntaRepository, PerguntaService perguntaService) {
@@ -41,16 +47,24 @@ public class PerguntaController {
         return model;
     }
 
-    @GetMapping("/form")
-    public ModelAndView exibirFormularioCadastro(ModelAndView model, RedirectAttributes redirectAttributes) {
-        model.setViewName("perguntas/formularioPergunta");
-        model.addObject("pergunta", new Pergunta());
-        model.addObject("titulo", "Nova Pergunta");
-        return model;
-    }
-
+@GetMapping("/form")
+public ModelAndView exibirFormularioCadastro(
+        @RequestParam(required = false) Long corridaId,
+        ModelAndView model) {
+    model.setViewName("perguntas/formularioPergunta");
+    model.addObject("pergunta", new Pergunta());
+    model.addObject("titulo", "Nova Pergunta");
+    model.addObject("corridaId", corridaId);
+    model.addObject("corridas", corridaService.listar()); // lista pra o select
+    return model;
+}
     @PostMapping("/salvar")
-    public ModelAndView salvarPergunta(@ModelAttribute("pergunta") Pergunta pergunta, RedirectAttributes redirectAttributes) {
+    public ModelAndView salvarPergunta(@ModelAttribute("pergunta") Pergunta pergunta,@RequestParam(required = false) Long corridaId,  RedirectAttributes redirectAttributes) {
+
+        if (corridaId != null){
+            Corrida corrida  = corridaService.buscarPorId(corridaId);
+            pergunta.setCorrida(corrida);
+        }
         if (pergunta.getId() != null) {
             perguntaService.UpdatePergunta(pergunta.getId(), pergunta);
         } else {

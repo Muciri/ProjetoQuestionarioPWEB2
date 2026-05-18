@@ -99,10 +99,26 @@
                     <input type="number" th:field="*{respostaCorreta}" min="0" max="4" required />
                 </div>
 
-                <div class="form-group">
-                    <label>ID da Corrida:</label>
-                    <input type="number" th:field="*{corrida.id}" required />
-                </div>
+                <!-- Mostra select de corrida se corridaId não veio -->
+<div class="form-group" th:if="${corridaId == null}">
+    <label>Corrida:</label>
+
+    <select name="corridaId" required>
+        <option value="">-- Selecione uma corrida --</option>
+
+        <option th:each="c : ${corridas}"
+                th:value="${c.id}"
+                th:text="${c.titulo}">
+        </option>
+    </select>
+</div>
+
+<!-- Se corridaId já existir, manda hidden -->
+<input th:if="${corridaId != null}"
+       type="hidden"
+       name="corridaId"
+       th:value="${corridaId}" />
+
 
                 <button type="submit" class="btn-salvar">Salvar Pergunta</button>
                 <a th:href="@{/perguntas}" class="btn-cancelar">Cancelar</a>
