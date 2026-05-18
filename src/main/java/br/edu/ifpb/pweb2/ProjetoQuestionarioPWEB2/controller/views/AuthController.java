@@ -47,7 +47,7 @@ public class AuthController {
         if(participanteValido(participante)) {
             redirectAttributes.addFlashAttribute("mensagem", "usuário autenticado com sucesso!");
             session.setAttribute("participante", this.participanteService.findByNome(participante.getNome()));
-            model.setViewName("redirect:/");
+            model.setViewName("redirect:/lobby");
         }
         else {
             redirectAttributes.addFlashAttribute("erro", "credenciais inválidas!");
