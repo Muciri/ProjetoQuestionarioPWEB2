@@ -16,16 +16,17 @@ public class RotasAdministradorInterceptor implements HandlerInterceptor {
                              Object handler) throws Exception {
 
         HttpSession session = request.getSession(false);
+        String ctx = request.getContextPath();
 
         if (session == null) {
-            response.sendRedirect("/autenticacao/login");
+            response.sendRedirect(ctx + "/autenticacao/login");
             return false;
         }
 
         Object participanteSessao = session.getAttribute("participante");
 
         if (!(participanteSessao instanceof Participante participante)) {
-            response.sendRedirect("/autenticacao/login");
+            response.sendRedirect(ctx + "/autenticacao/login");
             return false;
         }
 
@@ -33,7 +34,7 @@ public class RotasAdministradorInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        response.sendRedirect("/");
+        response.sendRedirect(ctx + "/");
         return false;
     }
 }

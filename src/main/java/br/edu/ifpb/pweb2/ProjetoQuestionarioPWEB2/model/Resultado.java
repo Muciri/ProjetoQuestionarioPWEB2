@@ -31,6 +31,6 @@ public class Resultado {
     @Column(name="pontuacao", nullable = false)
     private BigDecimal pontuacao;
 
-    @Column(name="dataHora", nullable = false)
+    @Column(name="data_hora", nullable = false)
     private LocalDateTime dataHora;
 }
