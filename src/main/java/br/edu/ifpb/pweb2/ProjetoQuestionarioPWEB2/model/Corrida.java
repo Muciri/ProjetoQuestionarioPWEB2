@@ -40,7 +40,7 @@ public class Corrida {
 
     @NotNull(message = "Tempo é obrigatório")
     @Min(value = 10, message = "Tempo mínimo é 10 segundos")
-    @Column(name="tempoSegundos", nullable = false)
+    @Column(name="tempo_segundos", nullable = false)
     private Integer tempoSegundos;
 
     @Column(name="ativa", nullable = false)
