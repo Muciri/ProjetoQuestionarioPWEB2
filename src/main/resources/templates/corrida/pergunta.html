@@ -1,144 +1,149 @@
 <!DOCTYPE html>
-<html lang="pt-br"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/mainlayout}">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/mainlayout}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corrida</title>
-    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}"/>
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}" />
     <style>
-    .page-container {
-        display: flex;
-        justify-content: center;
-        padding: 40px;
-        background-color: #f4f4f4;
-        min-height: calc(100vh - 120px);
-    }
+        .page-container {
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+            background-color: #f4f4f4;
+            min-height: calc(100vh - 120px);
+        }
 
-    .box {
-        background-color: white;
-        padding: 30px 40px;
-        border-radius: 8px;
-        text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        width: 650px;
-    }
+        .box {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 650px;
+        }
 
-    h1 {
-        color: #3fa14c;
-        margin-bottom: 10px;
-    }
+        h1 {
+            color: #3fa14c;
+            margin-bottom: 10px;
+        }
 
-    .subtitulo {
-        color: #555;
-        margin-bottom: 20px;
-    }
+        .subtitulo {
+            color: #555;
+            margin-bottom: 20px;
+        }
 
-    .info-corrida {
-        display: flex;
-        justify-content: space-between;
-        gap: 15px;
-        margin: 20px 0;
-    }
+        .info-corrida {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin: 20px 0;
+        }
 
-    .info-card {
-        flex: 1;
-        background-color: #fafafa;
-        border-left: 4px solid #3fa14c;
-        padding: 12px;
-        border-radius: 4px;
-        text-align: left;
-    }
+        .info-card {
+            flex: 1;
+            background-color: #fafafa;
+            border-left: 4px solid #3fa14c;
+            padding: 12px;
+            border-radius: 4px;
+            text-align: left;
+        }
 
-    .info-card strong {
-        color: #3fa14c;
-    }
+        .info-card strong {
+            color: #3fa14c;
+        }
 
-    .mensagem {
-        color: green;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
+        .mensagem {
+            color: green;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
-    .erro {
-        color: red;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
+        .erro {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
-    .pergunta {
-        text-align: left;
-        margin: 20px 0;
-        padding: 20px;
-        border-left: 4px solid #3fa14c;
-        background-color: #fafafa;
-        border-radius: 4px;
-    }
+        .aviso {
+            color: #f57c00;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
-    .pergunta h2 {
-        color: #333;
-        font-size: 22px;
-        margin-bottom: 20px;
-    }
+        .pergunta {
+            text-align: left;
+            margin: 20px 0;
+            padding: 20px;
+            border-left: 4px solid #3fa14c;
+            background-color: #fafafa;
+            border-radius: 4px;
+        }
 
-    .alternativas {
-        margin-top: 15px;
-    }
+        .pergunta h2 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
 
-    .alternativa-opcao {
-        display: block;
-        background-color: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 12px;
-        margin-bottom: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
+        .alternativas {
+            margin-top: 15px;
+        }
 
-    .alternativa-opcao:hover {
-        border-color: #3fa14c;
-        background-color: #f1fff3;
-    }
+        .alternativa-opcao {
+            display: block;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-    .alternativa-opcao input {
-        margin-right: 10px;
-    }
+        .alternativa-opcao:hover {
+            border-color: #3fa14c;
+            background-color: #f1fff3;
+        }
 
-    .btn-responder {
-        background: #3fa14c;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        text-decoration: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 15px;
-    }
+        .alternativa-opcao input {
+            margin-right: 10px;
+        }
 
-    .btn-responder:hover {
-        background: #2f7d3a;
-    }
+        .btn-responder {
+            background: #3fa14c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+        }
 
-    .btn-voltar {
-        display: inline-block;
-        margin-top: 15px;
-        color: #555;
-        text-decoration: none;
-        font-weight: bold;
-    }
+        .btn-responder:hover {
+            background: #2f7d3a;
+        }
 
-    .btn-voltar:hover {
-        text-decoration: underline;
-    }
-</style>
+        .btn-voltar {
+            display: inline-block;
+            margin-top: 15px;
+            color: #555;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-voltar:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <main layout:fragment="conteudo">
 
- <div class="page-container">
+    <div class="page-container">
         <div class="box">
 
             <h1 th:text="${corrida.titulo}">Título da Corrida</h1>
@@ -160,6 +165,7 @@
             </div>
 
             <p th:if="${mensagem}" th:text="${mensagem}" class="mensagem"></p>
+            <p th:if="${aviso}" th:text="${aviso}" class="aviso"></p>
             <p th:if="${erro}" th:text="${erro}" class="erro"></p>
 
             <form th:action="@{/corrida/{id}/responder(id=${corrida.id})}" method="post">
@@ -169,12 +175,8 @@
                     </h2>
 
                     <div class="alternativas">
-                        <label th:each="alternativa, status : ${pergunta.alternativas}"
-                               class="alternativa-opcao">
-                            <input type="radio"
-                                   name="respostaSelecionada"
-                                   th:value="${status.index}"
-                                   required>
+                        <label th:each="alternativa, status : ${pergunta.alternativas}" class="alternativa-opcao">
+                            <input type="radio" name="respostaSelecionada" th:value="${status.index}" required>
                             <span th:text="${alternativa}">Alternativa</span>
                         </label>
                     </div>
@@ -191,27 +193,28 @@
     </div>
 
     <script th:inline="javascript">
-    let tempoRestante = /*[[${tempoRestante}]]*/ 0;
-    const contador = document.getElementById("contador-tempo");
+        let tempoRestante = /*[[${tempoRestante}]]*/ 0;
+        const contador = document.getElementById("contador-tempo");
 
-    const intervalo = setInterval(function () {
-        tempoRestante--;
+        const intervalo = setInterval(function () {
+            tempoRestante--;
 
-        if (tempoRestante <= 10) {
-            contador.style.color = "red";
-            contador.style.fontWeight = "bold";
-        }
+            if (tempoRestante <= 10) {
+                contador.style.color = "red";
+                contador.style.fontWeight = "bold";
+            }
 
-        if (tempoRestante <= 0) {
-            contador.textContent = "0";
-            clearInterval(intervalo);
+            if (tempoRestante <= 0) {
+                contador.textContent = "0";
+                clearInterval(intervalo);
 
-            window.location.href = /*[[@{/corrida/{id}/resultado(id=${corrida.id})}]]*/ "";
-        } else {
-            contador.textContent = tempoRestante;
-        }
-    }, 1000);
-</script> 
+                window.location.href = /*[[@{/corrida/{id}/resultado(id=${corrida.id})}]]*/ "";
+            } else {
+                contador.textContent = tempoRestante;
+            }
+        }, 1000);
+    </script>
 
 </main>
+
 </html>

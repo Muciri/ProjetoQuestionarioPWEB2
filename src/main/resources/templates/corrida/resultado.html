@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-br"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/mainlayout}">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/mainlayout}">
 
 <head>
     <meta charset="UTF-8">
     <title>Resultado da Corrida</title>
-    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}"/>
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}" />
     <style>
         .resultado-container {
             max-width: 600px;
@@ -21,7 +19,7 @@
             border: 1px solid #c8e6c9;
             border-radius: 12px;
             padding: 40px 36px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
         }
 
         .resultado-icone {
@@ -43,6 +41,18 @@
             color: #555;
             font-size: 16px;
             margin-bottom: 30px;
+        }
+
+        .resultado-aviso {
+            color: #f57c00;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .resultado-erro {
+            color: #c62828;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
         .resultado-stats {
@@ -122,21 +132,21 @@
             <!-- Ícone e título dinâmico -->
             <div class="resultado-icone" th:text="${expirou} ? '⏰' : '🏆'"></div>
 
-            <h1 class="resultado-titulo"
-                th:classappend="${expirou} ? 'expirou' : ''"
+            <h1 class="resultado-titulo" th:classappend="${expirou} ? 'expirou' : ''"
                 th:text="${expirou} ? 'Tempo Esgotado!' : 'Corrida Concluída!'">
             </h1>
 
-            <p class="resultado-mensagem" th:text="${mensagem}"></p>
+            <p class="resultado-mensagem" th:if="${mensagem}" th:text="${mensagem}"></p>
+            <p class="resultado-aviso" th:if="${aviso}" th:text="${aviso}"></p>
+            <p class="resultado-erro" th:if="${erro}" th:text="${erro}"></p>
 
             <hr class="divisor">
 
             <!-- Estatísticas -->
             <div class="resultado-stats">
                 <div class="stat-item">
-                    <span class="stat-valor"
-                          th:classappend="${expirou} ? 'expirou' : ''"
-                          th:text="${pontuacao}">0</span>
+                    <span class="stat-valor" th:classappend="${expirou} ? 'expirou' : ''"
+                        th:text="${pontuacao}">0</span>
                     <span class="stat-label">pontos</span>
                 </div>
 
@@ -158,8 +168,7 @@
                 <a class="btn-ranking" th:href="@{/ranking/{id}(id=${corrida.id})}">
                     Ver Ranking desta Corrida
                 </a>
-                <a class="btn-ranking" th:href="@{/ranking}"
-                   style="background:#388e3c;">
+                <a class="btn-ranking" th:href="@{/ranking}" style="background:#388e3c;">
                     Ver Ranking Geral
                 </a>
                 <a class="btn-lobby" th:href="@{/lobby}">← Voltar ao Lobby</a>
