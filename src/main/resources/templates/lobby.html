@@ -6,6 +6,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
     <title>Lobby — Corridas Disponíveis</title>
     <style>
         .lobby-container {
@@ -113,6 +114,31 @@
             font-weight: bold;
         }
 
+        .btn-continuar {
+            background: #f57c00;
+            color: white;
+            text-decoration: none;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .btn-continuar:hover {
+            background: #e65100;
+        }
+
+        .badge-em-andamento {
+            background: #fff3e0;
+            color: #e65100;
+            border: 1px solid #ffcc80;
+            border-radius: 12px;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
         .sem-corridas {
             text-align: center;
             padding: 60px 20px;
@@ -152,10 +178,16 @@
             </div>
 
             <div class="corrida-acoes">
-                <!-- Corrida já concluída pelo participante -->
-                <span class="badge-feita" th:if="${corridasFeitasIds.contains(c.id)}">✓ Já participou</span>
+                <span class="badge-em-andamento" th:if="${corridaAtivaId != null and c.id == corridaAtivaId}">Em andamento</span>
+                <span class="badge-feita" th:if="${corridaAtivaId == null and corridasFeitasIds.contains(c.id)}">✓ Já participou</span>
 
+                <a class="btn-continuar"
+                   th:if="${corridaAtivaId != null and c.id == corridaAtivaId}"
+                   th:href="@{/corrida/{id}/pergunta/{i}(id=${c.id}, i=${indicePerguntaAtual})}">
+                    Continuar
+                </a>
                 <a class="btn-iniciar"
+                   th:unless="${corridaAtivaId != null and c.id == corridaAtivaId}"
                    th:href="@{/corrida/{id}/iniciar(id=${c.id})}"
                    th:text="${corridasFeitasIds.contains(c.id)} ? 'Jogar Novamente' : 'Iniciar Corrida'">
                     Iniciar Corrida

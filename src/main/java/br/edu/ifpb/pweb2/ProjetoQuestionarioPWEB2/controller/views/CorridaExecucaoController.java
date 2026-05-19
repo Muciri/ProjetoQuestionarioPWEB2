@@ -57,8 +57,12 @@ public class CorridaExecucaoController {
     @GetMapping("/{id}/iniciar")
     public String iniciar(@PathVariable Long id, HttpSession session, RedirectAttributes flash) {
 
-        // RN07: bloqueia se já há corrida em andamento
-        if (sessaoCorridaService.corridaAtiva(session) != null) {
+        Corrida corridaAtiva = sessaoCorridaService.corridaAtiva(session);
+        if (corridaAtiva != null) {
+            if (corridaAtiva.getId().equals(id)) {
+                int indice = sessaoCorridaService.getIndicePergunta(session);
+                return "redirect:/corrida/" + id + "/pergunta/" + indice;
+            }
             flash.addFlashAttribute("aviso",
                     "Corrida já começou! Termine a corrida atual antes de iniciar outra.");
             return "redirect:/lobby";
