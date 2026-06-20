@@ -1,8 +1,10 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.views;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.ParticipanteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -44,18 +46,21 @@ public class CorridaExecucaoController {
     private final CorridaService corridaService;
     private final SessaoCorridaService sessaoCorridaService;
     private final ResultadoService resultadoService;
+    private final ParticipanteService participanteService;
 
     public CorridaExecucaoController(CorridaService corridaService,
                                      SessaoCorridaService sessaoCorridaService,
-                                     ResultadoService resultadoService) {
+                                     ResultadoService resultadoService,
+                                     ParticipanteService participanteService) {
         this.corridaService = corridaService;
         this.sessaoCorridaService = sessaoCorridaService;
         this.resultadoService = resultadoService;
+        this.participanteService = participanteService;
     }
 
     // Backlog 13 + 14: valida corrida, salva timestamp na sessão, redireciona
     @GetMapping("/{id}/iniciar")
-    public String iniciar(@PathVariable Long id, HttpSession session, RedirectAttributes flash) {
+    public String iniciar(@PathVariable Long id, HttpSession session, RedirectAttributes flash, Principal principal) {
 
         Corrida corridaAtiva = sessaoCorridaService.corridaAtiva(session);
         if (corridaAtiva != null) {
@@ -78,7 +83,8 @@ public class CorridaExecucaoController {
 
         sessaoCorridaService.iniciarCorrida(session, corrida);
         logger.info("Corrida {} iniciada para participante {}",
-                corrida.getId(), getParticipante(session).getNome());
+                //corrida.getId(), getParticipante(session).getNome());
+                corrida.getId(), principal.getName());
 
         return "redirect:/corrida/" + id + "/pergunta/0";
     }
@@ -182,8 +188,9 @@ public class CorridaExecucaoController {
 
     // Tela de resultado — Felipe redireciona aqui após última pergunta ou timeout
     @GetMapping("/{id}/resultado")
-    public String resultado(@PathVariable Long id, HttpSession session, Model model) {
-        Participante participante = getParticipante(session);
+    public String resultado(@PathVariable Long id, HttpSession session, Model model, Principal principal) {
+        //Participante participante = getParticipante(session);
+        Participante participante = participanteService.findByNome(principal.getName());
         Corrida corrida = buscarCorridaOuFalhar(id);
 
         Corrida corridaAtual = sessaoCorridaService.corridaAtiva(session);

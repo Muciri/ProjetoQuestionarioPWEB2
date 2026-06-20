@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Login</title>
   <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}"/>
+
   <style>
     body {
         font-family: Arial, sans-serif;
@@ -12,27 +13,33 @@
         justify-content: center;
         padding: 40px;
     }
+
     .form-container {
         background: white;
         padding: 30px;
         border-radius: 8px;
         width: 400px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 10px rgba(0,0,0,.1);
     }
+
     .form-group {
         margin-bottom: 15px;
     }
+
     label {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
     }
+
     input {
         width: 100%;
         padding: 8px;
+        box-sizing: border-box;
         border: 1px solid #ddd;
         border-radius: 4px;
     }
+
     .btn-login {
         background: #3fa14c;
         color: white;
@@ -42,6 +49,7 @@
         border-radius: 4px;
         width: 100%;
     }
+
     .btn-cadastro {
         display: block;
         text-align: center;
@@ -49,32 +57,61 @@
         color: #666;
         text-decoration: none;
     }
-    #erro {
-      color:red;
+
+    .erro {
+        color: red;
     }
-    #mensagem {
-      color:green;
+
+    .sucesso {
+        color: green;
     }
   </style>
 </head>
 <body>
 
 <div class="form-container">
-  <h2>Login</h2>
-  <p th:if="${erro}" th:text="${erro}" id="erro"></p>
-  <p th:if="${mensagem}" th:text="${mensagem}" id="mensagem"></p>
 
-  <form th:action="@{/autenticacao/logar}" th:object="${participante}" method="post">
+  <h2>Login</h2>
+
+  <p class="erro" th:if="${param.error}">
+    Usuário ou senha inválidos.
+  </p>
+
+<!--  <p class="erro" th:if="${param.error}" th:text="${erro}"></p>-->
+
+  <p class="sucesso" th:if="${param.logout}">
+    Logout realizado com sucesso.
+  </p>
+
+  <p class="sucesso" th:if="${mensagem}" th:text="${mensagem}"></p>
+
+  <form th:action="@{/autenticacao/login}" method="post">
 
     <div class="form-group">
-      <label>Nome:</label>
-      <input type="text" th:field="*{nome}" required />
+      <label>Usuário:</label>
+      <input type="text"
+             name="username"
+             required>
     </div>
 
-    <button type="submit" class="btn-login">Entrar</button>
+    <div class="form-group">
+      <label>Senha:</label>
+      <input type="password"
+             name="password"
+             required>
+    </div>
 
-    <a th:href="@{/autenticacao/cadastro}" class="btn-cadastro"> Criar conta </a>
+    <button type="submit" class="btn-login">
+      Entrar
+    </button>
+
+    <a th:href="@{/autenticacao/cadastro}"
+       class="btn-cadastro">
+      Criar conta
+    </a>
+
   </form>
+
 </div>
 
 </body>

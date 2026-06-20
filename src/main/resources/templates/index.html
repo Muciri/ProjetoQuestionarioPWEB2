@@ -48,7 +48,7 @@
     <div class="page-container">
 
         <!-- Usuário NÃO logado -->
-        <div class="box" th:if="${session.participante == null}">
+        <div class="box" sec:authorize="!isAuthenticated()">
             <h1 th:text="${titulo}">Sistema</h1>
             <p th:text="${mensagem}">Mensagem de boas-vindas</p>
             <div class="links">
@@ -58,11 +58,11 @@
         </div>
 
         <!-- Usuário logado -->
-        <div class="box" th:if="${session.participante != null}">
-            <h1>Bem-vindo, <span th:text="${session.participante.nome}"></span>!</h1>
+        <div class="box" sec:authorize="isAuthenticated()">
+            <h1>Bem-vindo, <span sec:authentication="name"></span>!</h1>
             <p th:text="${mensagem}">Mensagem de boas-vindas</p>
 
-            <div class="links" th:if="${session.participante.admin == true}">
+            <div class="links" sec:authorize="hasRole('ADMIN')">
                 <a th:href="@{/perguntas}">Gerenciar Perguntas</a>
                 <br>
                 <a th:href="@{/corridas}">Gerenciar Corridas</a>

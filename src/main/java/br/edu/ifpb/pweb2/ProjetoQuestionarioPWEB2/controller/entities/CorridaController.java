@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.entities;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -64,6 +65,7 @@ public class CorridaController {
     // pois após salvar o JPA preenche o id mesmo em objetos novos.
     // -------------------------------------------------------
     @PostMapping("/salvar")
+    @PreAuthorize("hasRole('ADMIN')")
     public String salvar(@Valid @ModelAttribute("corrida") Corrida corrida,BindingResult result, RedirectAttributes flash) {
 
         if (result.hasErrors()) {

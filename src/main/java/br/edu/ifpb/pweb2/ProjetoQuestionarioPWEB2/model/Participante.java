@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -22,6 +23,11 @@ public class Participante {
 
     @Column(name="email", nullable = false, unique = true)
     private String email;
+
+    @ManyToOne
+    @JoinColumn(name = "username")
+    @ToString.Exclude
+    private User user;
 
     @Column(name="admin", nullable = false)
     private Boolean admin;

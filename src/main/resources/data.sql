@@ -7,7 +7,7 @@
 --   D) Corridas INATIVAS                              (UC02/UC03 sem afetar o lobby)
 --   E) Participantes com pontuação e SEM pontuação    (UC09 destaque + aviso)
 
-TRUNCATE TABLE resultado, pergunta_alternativas, pergunta, corrida, participante
+TRUNCATE TABLE resultado, pergunta_alternativas, pergunta, corrida, participante, authorities, users
     RESTART IDENTITY CASCADE;
 
 -- PARTICIPANTES
@@ -15,16 +15,39 @@ TRUNCATE TABLE resultado, pergunta_alternativas, pergunta, corrida, participante
 --   ids 5–7: participantes COM pontuação
 --   ids 8–9: participantes SEM pontuação (testar aviso do UC09)
 
-INSERT INTO Participante (nome, email, admin) VALUES
-('Murilo',     'murilo@email.com',     true),
-('Gabriel',    'gabriel@email.com',    false),
-('Francisco',  'francisco@email.com',  false),
-('Felipe',     'felipe@email.com',     false),
-('Ana',        'ana@email.com',        false),
-('Lucas',      'lucas@email.com',      false),
-('Bianca',     'bianca@email.com',     false),
-('Joao',       'joao@email.com',       false),
-('Maria',      'maria@email.com',      false);
+INSERT INTO users(username, password, enabled) VALUES
+('Murilo', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true),
+('Gabriel', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true),
+('Francisco', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true),
+('Felipe', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true),
+('Ana', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true),
+('Lucas', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true),
+('Bianca', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true),
+('Joao', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true),
+('Maria', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true);
+
+INSERT INTO authorities(username, authority) VALUES
+('Murilo', 'ROLE_ADMIN'),
+('Murilo', 'ROLE_PARTICIPANTE'),
+('Gabriel', 'ROLE_PARTICIPANTE'),
+('Francisco', 'ROLE_PARTICIPANTE'),
+('Felipe', 'ROLE_PARTICIPANTE'),
+('Ana', 'ROLE_PARTICIPANTE'),
+('Lucas', 'ROLE_PARTICIPANTE'),
+('Bianca', 'ROLE_PARTICIPANTE'),
+('Joao', 'ROLE_PARTICIPANTE'),
+('Maria', 'ROLE_PARTICIPANTE');
+
+INSERT INTO Participante (nome, email, username, admin) VALUES
+('Murilo',     'murilo@email.com',     'Murilo',     true),
+('Gabriel',    'gabriel@email.com',    'Gabriel',    false),
+('Francisco',  'francisco@email.com',  'Francisco',  false),
+('Felipe',     'felipe@email.com',     'Felipe',     false),
+('Ana',        'ana@email.com',        'Ana',        false),
+('Lucas',      'lucas@email.com',      'Lucas',      false),
+('Bianca',     'bianca@email.com',     'Bianca',     false),
+('Joao',       'joao@email.com',       'Joao',       false),
+('Maria',      'maria@email.com',      'Maria',      false);
 
 -- CORRIDAS
 --   ids 1–5: ATIVAS com perguntas    (cenários A e B)

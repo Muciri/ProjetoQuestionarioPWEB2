@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.views;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class LobbyController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('PARTICIPANTE', 'ADMIN')")
     public String lobby(HttpSession session, Model model) {
         Participante participante = (Participante) session.getAttribute("participante");
 

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/")
@@ -13,5 +14,11 @@ public class ViewController {
         model.addAttribute("titulo", "Projeto Questionário");
         model.addAttribute("mensagem", "Bem-vindo! O sistema está funcionando");
         return "index";
+    }
+
+    @GetMapping("/acesso-negado")
+    public ModelAndView acessoNegado(ModelAndView model) {
+        model.setViewName("acesso-negado");
+        return model;
     }
 }

@@ -7,6 +7,7 @@ import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.PerguntaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +61,9 @@ public ModelAndView exibirFormularioCadastro(
     model.addObject("corridas", corridaService.listar());
     return model;
 }
+
     @PostMapping("/salvar")
+    @PreAuthorize("hasRole('ADMIN')")
     public ModelAndView salvarPergunta(@Valid @ModelAttribute("pergunta") Pergunta pergunta, BindingResult bindingResult, @RequestParam(required = false) Long corridaId, ModelAndView model, RedirectAttributes redirectAttributes) {
 
         if (corridaId != null) {
