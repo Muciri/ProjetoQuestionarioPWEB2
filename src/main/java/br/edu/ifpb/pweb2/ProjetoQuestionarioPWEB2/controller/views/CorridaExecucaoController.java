@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.RespostaInvalidaException;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaInvalidaException;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaNaoEncontradaException;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
@@ -131,6 +132,8 @@ public class CorridaExecucaoController {
 
 
     Pergunta perguntaAtual = perguntas.get(indiceSessao);
+    
+
 
     model.addAttribute("corrida", corrida);
     model.addAttribute("pergunta", perguntaAtual);
@@ -165,6 +168,12 @@ public class CorridaExecucaoController {
         }
         
         Pergunta perguntaAtual = perguntas.get(indiceAtual);
+
+        if (respostaSelecionada == null
+                || respostaSelecionada < 0
+                || respostaSelecionada >= perguntaAtual.getAlternativas().size()) {
+            throw new RespostaInvalidaException();
+        }
 
         if(respostaSelecionada.equals(perguntaAtual.getRespostaCorreta())){
             sessaoCorridaService.incrementarAcertos(session);
@@ -207,11 +216,7 @@ public class CorridaExecucaoController {
     // Métodos privados auxiliares (separação de responsabilidades)
 
     private Corrida buscarCorridaOuFalhar(Long id) {
-        try {
-            return corridaService.buscarPorId(id);
-        } catch (RuntimeException ex) {
-            throw new CorridaNaoEncontradaException("Corrida com id " + id + " não encontrada.");
-        }
+        return corridaService.buscarPorId(id);
     }
 
     private void preencherResultadoNovo(Model model, HttpSession session,

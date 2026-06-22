@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service;
 
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaNaoEncontradaException;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.entities.CorridaController;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.CorridaRepository;
@@ -43,24 +44,20 @@ public class CorridaService {
     }
 
     public void excluir(Long id) {
+        buscarPorId(id);
         repository.deleteById(id);
     }
 
     public Corrida buscarPorId(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Corrida não encontrada: " + id));
+                .orElseThrow(() -> new CorridaNaoEncontradaException(id));
     }
 
-
     public boolean corridaValida(Corrida corrida){
-        if(corrida.getTempoSegundos() == null || corrida.getTempoSegundos() < 10){
-            return false;
-        }
-        if (corrida.getPerguntas() == null || corrida.getPerguntas().isEmpty()) {
-            return false;
-        }
-        return true;
-
-        // vou colocar em um so if dps esses 2 ifs 
+        return Boolean.TRUE.equals(corrida.getAtiva())
+            && corrida.getTempoSegundos() != null
+            && corrida.getTempoSegundos() >= 10
+            && corrida.getPerguntas() != null
+            && !corrida.getPerguntas().isEmpty();
     }
 }

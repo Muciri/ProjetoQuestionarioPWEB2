@@ -1,5 +1,7 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service;
 
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaNaoEncontradaException;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.PerguntaNaoEncontradaException;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Pergunta;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.CorridaRepository;
@@ -30,26 +32,22 @@ public class PerguntaService {
     }
 
     public Pergunta getPerguntaById(Long id) {
-        return this.perguntaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("pergunta não encontrada")); //depois substituir por notFoundException
-    }
+    return perguntaRepository.findById(id)
+            .orElseThrow(() -> new PerguntaNaoEncontradaException(id));
+}
 
     public Pergunta createPergunta(Pergunta pergunta) {
         return this.perguntaRepository.save(pergunta);
     }
 
-    public Pergunta UpdatePergunta(Long id, Pergunta pergunta) {
-        if(!perguntaRepository.existsById(id)) {
-            throw new RuntimeException("pergunta não encontrada"); //depois substituir por notFoundException
-        }
-        pergunta.setId(id);
-        return this.perguntaRepository.save(pergunta);
-    }
+    public Pergunta updatePergunta(Long id, Pergunta pergunta) {
+    getPerguntaById(id);
+    pergunta.setId(id);
+    return perguntaRepository.save(pergunta);
+}
 
     public void deletePerguntaById(Long id) {
-        if(!perguntaRepository.existsById(id)) {
-            throw new RuntimeException("pergunta não encontrada"); //depois substituir por notFoundException
-        }
-        perguntaRepository.deleteById(id);
-    }
+    getPerguntaById(id);
+    perguntaRepository.deleteById(id);
+}
 }

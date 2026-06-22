@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.ResultadoNaoEncontradoException;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Participante;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Resultado;
@@ -79,6 +80,12 @@ public class ResultadoService {
 
     public boolean participanteTemPontuacao(Participante participante, Corrida corrida) {
         return resultadoRepository.existsByParticipanteAndCorrida(participante, corrida);
+    }
+
+    public Resultado buscarUltimoOuFalhar(Participante participante, Corrida corrida) {
+    return buscarUltimo(participante, corrida)
+            .orElseThrow(() -> new ResultadoNaoEncontradoException(
+                    participante.getId(), corrida.getId()));
     }
 
     // IDs das corridas que o participante já concluiu (usado no lobby)

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Corrida não encontrada")
 public class CorridaNaoEncontradaException extends RuntimeException {
 
-    public CorridaNaoEncontradaException(String mensagem) {
-        super(mensagem);
+    public CorridaNaoEncontradaException(Long id) {
+         super("Corrida com id " + id + " não encontrada.");
     }
 }

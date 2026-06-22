@@ -79,7 +79,7 @@ public ModelAndView exibirFormularioCadastro(
         }
 
         if (pergunta.getId() != null) {
-            perguntaService.UpdatePergunta(pergunta.getId(), pergunta);
+            perguntaService.updatePergunta(pergunta.getId(), pergunta);
         } else {
             perguntaService.createPergunta(pergunta);
         }
