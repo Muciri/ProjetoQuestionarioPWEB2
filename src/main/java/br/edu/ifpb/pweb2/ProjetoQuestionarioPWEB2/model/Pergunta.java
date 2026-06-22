@@ -30,6 +30,9 @@ public class Pergunta {
     @Column(name = "id_pergunta")
     private Long id;
 
+    @Column(name = "imagem_path")
+    private String imagemPath;
+
     @NotBlank(message = "Enunciado é obrigatório")
     @Column(name="enunciado", nullable = false)
     private String enunciado;

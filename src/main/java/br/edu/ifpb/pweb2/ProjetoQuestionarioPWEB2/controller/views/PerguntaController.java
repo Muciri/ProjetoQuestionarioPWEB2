@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/perguntas")
@@ -64,7 +65,7 @@ public ModelAndView exibirFormularioCadastro(
 
     @PostMapping("/salvar")
     @PreAuthorize("hasRole('ADMIN')")
-    public ModelAndView salvarPergunta(@Valid @ModelAttribute("pergunta") Pergunta pergunta, BindingResult bindingResult, @RequestParam(required = false) Long corridaId, ModelAndView model, RedirectAttributes redirectAttributes) {
+    public ModelAndView salvarPergunta(@Valid @ModelAttribute("pergunta") Pergunta pergunta, BindingResult bindingResult, @RequestParam(required = false) Long corridaId, @RequestParam(value="imagem", required = false) MultipartFile imagem, ModelAndView model, RedirectAttributes redirectAttributes) {
 
         if (corridaId != null) {
             Corrida corrida = corridaService.buscarPorId(corridaId);
@@ -76,6 +77,27 @@ public ModelAndView exibirFormularioCadastro(
             model.addObject("titulo", pergunta.getId() != null ? "Editar Pergunta" : "Nova Pergunta");
             model.addObject("corridas", corridaService.listar());
             return model;
+        }
+
+        if (imagem != null && !imagem.isEmpty()) {
+            try {
+                if (pergunta.getId() != null) {
+                    Pergunta existente = perguntaService.getPerguntaById(pergunta.getId());
+                    if (existente.getImagemPath() != null) {
+                        perguntaService.excluirImagem(existente.getImagemPath());
+                    }
+                }
+                String caminho = perguntaService.salvarImagem(imagem);
+                pergunta.setImagemPath(caminho);
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("aviso",
+                    "Pergunta salva, mas houve erro ao processar a imagem: " + e.getMessage());
+            }
+        } else {
+            if (pergunta.getId() != null) {
+                Pergunta existente = perguntaService.getPerguntaById(pergunta.getId());
+                pergunta.setImagemPath(existente.getImagemPath());
+            }
         }
 
         if (pergunta.getId() != null) {
@@ -99,8 +121,25 @@ public ModelAndView exibirFormularioCadastro(
         return model;
     }
 
+    @GetMapping("/{id}/excluir-imagem")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String excluirImagem(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Pergunta pergunta = perguntaService.getPerguntaById(id);
+        if (pergunta.getImagemPath() != null) {
+            perguntaService.excluirImagem(pergunta.getImagemPath());
+            pergunta.setImagemPath(null);
+            perguntaService.updatePergunta(id, pergunta);
+        }
+        redirectAttributes.addFlashAttribute("mensagem", "Imagem removida com sucesso!");
+        return "redirect:/perguntas/editar/" + id;
+    }
+
     @GetMapping("/excluir/{id}")
     public ModelAndView excluirPergunta(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Pergunta pergunta = perguntaService.getPerguntaById(id);
+        if(pergunta.getImagemPath() != null){
+            perguntaService.excluirImagem(pergunta.getImagemPath());
+        }
         perguntaService.deletePerguntaById(id);
 
         redirectAttributes.addFlashAttribute("mensagem", "pergunta excluída com sucesso!");

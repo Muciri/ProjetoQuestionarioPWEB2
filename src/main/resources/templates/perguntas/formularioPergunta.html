@@ -68,7 +68,7 @@
         <div class="form-container">
             <h2 th:text="${titulo}">Formulário</h2>
 
-            <form th:action="@{/perguntas/salvar}" th:object="${pergunta}" method="post">
+            <form th:action="@{/perguntas/salvar}" th:object="${pergunta}" method="post" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{id}" />
 
                 <div class="form-group">
@@ -99,6 +99,28 @@
                     <label>Índice da Resposta Correta (0 a 4):</label>
                     <input type="number" th:field="*{respostaCorreta}" min="0" max="4" required />
                 </div>
+
+                <div class="form-group">
+                    <label>Imagem da pergunta (opcional):</label>
+
+
+                    <div th:if="${pergunta.imagemPath != null}">
+                        <img th:src="${pergunta.imagemPath}" 
+                            alt="Imagem da pergunta"
+                            style="max-width: 300px; margin-bottom: 10px; display: block;" />
+                        <a th:href="@{/perguntas/{id}/excluir-imagem(id=${pergunta.id})}"
+                        onclick="return confirm('Deseja remover a imagem?')"
+                        style="color: red; font-size: 13px;">
+                            Remover imagem
+                        </a>
+                        <p style="font-size: 12px; color: #777; margin-top: 6px;">
+                            Envie um novo arquivo abaixo para substituir a imagem atual.
+                        </p>
+                    </div>
+
+
+                    <input type="file" name="imagem" accept="image/*" style="margin-top: 8px;" />
+            </div>
 
                 <div class="form-group" th:if="${corridaId == null}">
                     <label>Corrida:</label>
