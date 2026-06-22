@@ -83,7 +83,6 @@ public class CorridaExecucaoController {
 
         sessaoCorridaService.iniciarCorrida(session, corrida);
         logger.info("Corrida {} iniciada para participante {}",
-                //corrida.getId(), getParticipante(session).getNome());
                 corrida.getId(), principal.getName());
 
         return "redirect:/corrida/" + id + "/pergunta/0";
@@ -189,7 +188,6 @@ public class CorridaExecucaoController {
     // Tela de resultado — Felipe redireciona aqui após última pergunta ou timeout
     @GetMapping("/{id}/resultado")
     public String resultado(@PathVariable Long id, HttpSession session, Model model, Principal principal) {
-        //Participante participante = getParticipante(session);
         Participante participante = participanteService.findByNome(principal.getName());
         Corrida corrida = buscarCorridaOuFalhar(id);
 
@@ -214,10 +212,6 @@ public class CorridaExecucaoController {
         } catch (RuntimeException ex) {
             throw new CorridaNaoEncontradaException("Corrida com id " + id + " não encontrada.");
         }
-    }
-
-    private Participante getParticipante(HttpSession session) {
-        return (Participante) session.getAttribute("participante");
     }
 
     private void preencherResultadoNovo(Model model, HttpSession session,
