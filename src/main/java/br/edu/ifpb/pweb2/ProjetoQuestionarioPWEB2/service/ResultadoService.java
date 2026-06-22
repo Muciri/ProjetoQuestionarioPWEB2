@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
@@ -62,13 +64,21 @@ public class ResultadoService {
     }
 
     // Backlog 22
-    public List<Resultado> buscarRankingGeral() {
-        return resultadoRepository.findAllByOrderByPontuacaoDescDataHoraAsc();
+    public Page<Resultado> buscarRankingGeral(Pageable pageable) {
+        return resultadoRepository.findAllByOrderByPontuacaoDescDataHoraAsc(pageable);
     }
 
     // Backlog 23
-    public List<Resultado> buscarRankingPorCorrida(Corrida corrida) {
-        return resultadoRepository.findByCorridaOrderByPontuacaoDescDataHoraAsc(corrida);
+    public Page<Resultado> buscarRankingPorCorrida(Corrida corrida, Pageable pageable) {
+        return resultadoRepository.findByCorridaOrderByPontuacaoDescDataHoraAsc(corrida, pageable);
+    }
+
+    public boolean participanteTemPontuacao(Participante participante) {
+        return resultadoRepository.existsByParticipante(participante);
+    }
+
+    public boolean participanteTemPontuacao(Participante participante, Corrida corrida) {
+        return resultadoRepository.existsByParticipanteAndCorrida(participante, corrida);
     }
 
     // IDs das corridas que o participante já concluiu (usado no lobby)

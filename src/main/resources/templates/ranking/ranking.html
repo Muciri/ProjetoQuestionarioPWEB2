@@ -117,6 +117,76 @@
             font-size: 18px;
             margin-bottom: 8px;
         }
+
+        .paginacao-tamanho {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .paginacao-tamanho form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+
+        .paginacao-tamanho select,
+        .paginacao-tamanho input {
+            padding: 6px 8px;
+            border: 1px solid #a5d6a7;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .paginacao-tamanho input {
+            width: 70px;
+        }
+
+        .paginacao-tamanho button {
+            padding: 6px 12px;
+            border: 1px solid #a5d6a7;
+            border-radius: 6px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            cursor: pointer;
+        }
+
+        .paginacao-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .btn-pagina {
+            color: #2e7d32;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid #a5d6a7;
+            border-radius: 6px;
+        }
+
+        .btn-pagina:hover {
+            background: #e8f5e9;
+        }
+
+        .btn-pagina.desativado {
+            color: #bbb;
+            border-color: #eee;
+            cursor: default;
+        }
+
+        .info-pagina {
+            font-size: 14px;
+            color: #555;
+        }
     </style>
 </head>
 
@@ -143,13 +213,32 @@
         </div>
 
         <!-- Nenhum resultado -->
-        <div class="sem-resultados" th:if="${#lists.isEmpty(resultados)}">
+        <div class="sem-resultados" th:if="${resultados.empty}">
             <p>Nenhuma pontuação registrada ainda.</p>
             <small>Seja o primeiro a completar uma corrida!</small>
         </div>
 
+        <!-- Melhoria 2: seletor do tamanho da página -->
+        <div class="paginacao-tamanho" th:unless="${resultados.empty}"
+             th:with="acao=${corridaFiltro != null} ? @{/ranking/{id}(id=${corridaFiltro.id})} : @{/ranking}">
+            <form method="get" th:action="${acao}">
+                <label for="size-select">Linhas por página:</label>
+                <select id="size-select" name="size" onchange="this.form.submit()">
+                    <option th:each="op : ${ {2, 3, 5, 10, 20} }"
+                            th:value="${op}" th:text="${op}"
+                            th:selected="${op == tamanhoPagina}"></option>
+                </select>
+            </form>
+            <form method="get" th:action="${acao}">
+                <label for="size-input">ou digite:</label>
+                <input id="size-input" type="number" name="size" min="1" max="100"
+                       th:value="${tamanhoPagina}"/>
+                <button type="submit">Aplicar</button>
+            </form>
+        </div>
+
         <!-- Tabela de ranking -->
-        <table th:unless="${#lists.isEmpty(resultados)}">
+        <table th:unless="${resultados.empty}">
             <thead>
                 <tr>
                     <th>#</th>
@@ -161,12 +250,13 @@
             </thead>
             <tbody>
                 <tr th:each="r, stat : ${resultados}"
+                    th:with="posicao=${resultados.number * resultados.size + stat.count}"
                     th:classappend="${r.participante.id == participanteLogadoId} ? 'linha-destaque' : ''">
 
                     <!-- Posição com medalhas para o pódio -->
                     <td class="posicao"
-                        th:classappend="${stat.count == 1} ? 'posicao-ouro' : (${stat.count == 2} ? 'posicao-prata' : (${stat.count == 3} ? 'posicao-bronze' : ''))">
-                        <span th:text="${stat.count == 1} ? '🥇' : (${stat.count == 2} ? '🥈' : (${stat.count == 3} ? '🥉' : (${stat.count})))"></span>
+                        th:classappend="${posicao == 1} ? 'posicao-ouro' : (${posicao == 2} ? 'posicao-prata' : (${posicao == 3} ? 'posicao-bronze' : ''))">
+                        <span th:text="${posicao == 1} ? '🥇' : (${posicao == 2} ? '🥈' : (${posicao == 3} ? '🥉' : (${posicao})))"></span>
                     </td>
 
                     <!-- Nome + badge "Você" se for o participante logado -->
@@ -188,9 +278,24 @@
             </tbody>
         </table>
 
+        <!-- Melhoria 2: navegação entre as páginas -->
+        <div class="paginacao-nav" th:if="${resultados.totalPages > 1}"
+             th:with="anterior=${corridaFiltro != null} ? @{/ranking/{id}(id=${corridaFiltro.id}, page=${resultados.number - 1}, size=${tamanhoPagina})} : @{/ranking(page=${resultados.number - 1}, size=${tamanhoPagina})},
+                      proxima=${corridaFiltro != null} ? @{/ranking/{id}(id=${corridaFiltro.id}, page=${resultados.number + 1}, size=${tamanhoPagina})} : @{/ranking(page=${resultados.number + 1}, size=${tamanhoPagina})}">
+
+            <a class="btn-pagina" th:href="${anterior}" th:unless="${resultados.first}">← Anterior</a>
+            <span class="btn-pagina desativado" th:if="${resultados.first}">← Anterior</span>
+
+            <span class="info-pagina"
+                  th:text="'Página ' + (${resultados.number + 1}) + ' de ' + ${resultados.totalPages}"></span>
+
+            <a class="btn-pagina" th:href="${proxima}" th:unless="${resultados.last}">Próxima →</a>
+            <span class="btn-pagina desativado" th:if="${resultados.last}">Próxima →</span>
+        </div>
+
         <!-- UC09: aviso se o participante logado não tem pontuação -->
         <p style="margin-top:20px; color:#888; font-size:13px; text-align:center;"
-           th:if="${!#lists.isEmpty(resultados) and !participanteTemPontuacao}">
+           th:if="${!resultados.empty and !participanteTemPontuacao}">
             Você ainda não possui pontuação neste ranking. Complete uma corrida para aparecer aqui!
         </p>
 
