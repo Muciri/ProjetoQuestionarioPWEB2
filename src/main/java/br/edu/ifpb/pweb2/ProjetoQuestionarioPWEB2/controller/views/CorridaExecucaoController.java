@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.ParticipanteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,20 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.RespostaInvalidaException;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaInvalidaException;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaNaoEncontradaException;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.RespostaInvalidaException;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Participante;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Pergunta;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Resultado;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
+import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.ParticipanteService;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.ResultadoService;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.SessaoCorridaService;
 import jakarta.servlet.http.HttpSession;
 
 /**
- * UC08 (parcial): iniciar corrida + persistir resultado.
  *
  * Fluxo (POST-Redirect-GET, conforme slide "Spring MVC - Redirect e Flash"):
  *   1. Participante clica em "Iniciar" no lobby → GET /corrida/{id}/iniciar
