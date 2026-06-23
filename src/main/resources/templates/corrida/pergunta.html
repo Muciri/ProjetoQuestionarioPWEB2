@@ -7,187 +7,301 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corrida</title>
     <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}" />
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         .page-container {
-            display: flex;
-            justify-content: center;
-            padding: 40px;
-            background-color: #f4f4f4;
             min-height: calc(100vh - 120px);
+            padding: 36px 20px;
+            background: #f3f6f4;
         }
 
         .box {
-            background-color: white;
-            padding: 30px 40px;
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #dfe7e1;
             border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            width: 650px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
         }
 
-        h1 {
-            color: #3fa14c;
-            margin-bottom: 10px;
+        .corrida-header {
+            padding: 28px 32px;
+            background: linear-gradient(135deg, #3fa14c, #2d7a37);
+            color: white;
+        }
+
+        .corrida-header h1 {
+            margin: 0 0 8px;
+            font-size: 1.8rem;
         }
 
         .subtitulo {
-            color: #555;
-            margin-bottom: 20px;
+            margin: 0;
+            color: #e9f7ec;
+        }
+
+        .conteudo {
+            padding: 28px 32px 32px;
         }
 
         .info-corrida {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .info-card {
-            flex: 1;
-            background-color: #fafafa;
-            border-left: 4px solid #3fa14c;
-            padding: 12px;
-            border-radius: 4px;
-            text-align: left;
-        }
-
-        .info-card strong {
-            color: #3fa14c;
-        }
-
-        .mensagem {
-            color: green;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .erro {
-            color: red;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .aviso {
-            color: #f57c00;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .pergunta {
-            text-align: left;
-            margin: 20px 0;
-            padding: 20px;
-            border-left: 4px solid #3fa14c;
-            background-color: #fafafa;
-            border-radius: 4px;
-        }
-
-        .pergunta h2 {
-            color: #333;
-            font-size: 22px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
             margin-bottom: 20px;
         }
 
+        .info-card {
+            background: #f8faf8;
+            border: 1px solid #dfe7e1;
+            border-radius: 8px;
+            padding: 14px 16px;
+        }
+
+        .info-label {
+            display: block;
+            margin-bottom: 4px;
+            color: #52605a;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .info-valor {
+            color: #17211b;
+            font-size: 1.15rem;
+            font-weight: bold;
+        }
+
+        .tempo-alerta {
+            color: #c62828;
+        }
+
+        .progresso {
+            margin: 0 0 24px;
+        }
+
+        .progresso-texto {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #52605a;
+            font-size: 0.9rem;
+        }
+
+        .progresso-barra {
+            height: 10px;
+            border-radius: 999px;
+            background: #e8efe9;
+            overflow: hidden;
+        }
+
+        .progresso-preenchido {
+            height: 100%;
+            min-width: 8px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #3fa14c, #76c77f);
+        }
+
+        .mensagem,
+        .erro,
+        .aviso {
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin: 0 0 16px;
+            font-weight: bold;
+        }
+
+        .mensagem {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            color: #2e7d32;
+        }
+
+        .erro {
+            background: #fdecea;
+            border: 1px solid #ef9a9a;
+            color: #c62828;
+        }
+
+        .aviso {
+            background: #fff3cd;
+            border: 1px solid #ffcc80;
+            color: #8a5a00;
+        }
+
+        .pergunta {
+            margin: 20px 0 24px;
+            padding: 22px;
+            border: 1px solid #dfe7e1;
+            border-radius: 8px;
+            background: #fbfdfb;
+        }
+
+        .pergunta-label {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: #2d7a37;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .pergunta h2 {
+            margin: 0 0 20px;
+            color: #17211b;
+            font-size: 1.35rem;
+            line-height: 1.35;
+        }
+
         .alternativas {
-            margin-top: 15px;
+            display: grid;
+            gap: 10px;
         }
 
         .alternativa-opcao {
-            display: block;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 12px;
-            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border: 1px solid #d8dfda;
+            border-radius: 8px;
+            padding: 13px 14px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: border-color 0.2s, background-color 0.2s, transform 0.2s;
         }
 
         .alternativa-opcao:hover {
             border-color: #3fa14c;
-            background-color: #f1fff3;
+            background: #f1fff3;
+            transform: translateY(-1px);
         }
 
         .alternativa-opcao input {
-            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: #3fa14c;
+            flex: 0 0 auto;
+        }
+
+        .acoes {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .btn-responder {
             background: #3fa14c;
             color: white;
-            padding: 10px 20px;
+            padding: 11px 24px;
             border: none;
-            text-decoration: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             font-size: 15px;
+            transition: background 0.2s, transform 0.2s;
         }
 
         .btn-responder:hover {
             background: #2f7d3a;
+            transform: translateY(-1px);
+        }
+
+        .btn-responder:disabled {
+            background: #9ab79f;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-voltar {
-            display: inline-block;
-            margin-top: 15px;
-            color: #555;
+            color: #52605a;
             text-decoration: none;
             font-weight: bold;
         }
 
         .btn-voltar:hover {
+            color: #2d7a37;
             text-decoration: underline;
         }
+
     </style>
 </head>
-<main layout:fragment="conteudo">
 
+<main layout:fragment="conteudo">
     <div class="page-container">
         <div class="box">
 
-            <h1 th:text="${corrida.titulo}">Título da Corrida</h1>
-            <p class="subtitulo">Responda a pergunta abaixo para avançar na corrida.</p>
-
-            <div class="info-corrida">
-                <div class="info-card">
-                    <strong>Pergunta:</strong>
-                    <span th:text="${indiceAtual + 1}">1</span>
-                    de
-                    <span th:text="${totalPerguntas}">5</span>
-                </div>
-
-                <div class="info-card">
-                    <strong>Tempo restante:</strong>
-                    <span id="contador-tempo" th:text="${tempoRestante}">60</span>
-                    segundos
-                </div>
+            <div class="corrida-header">
+                <h1 th:text="${corrida.titulo}">Título da Corrida</h1>
+                <p class="subtitulo">Responda a pergunta abaixo para avançar na corrida.</p>
             </div>
 
-            <p th:if="${mensagem}" th:text="${mensagem}" class="mensagem"></p>
-            <p th:if="${aviso}" th:text="${aviso}" class="aviso"></p>
-            <p th:if="${erro}" th:text="${erro}" class="erro"></p>
+            <div class="conteudo">
+                <div class="info-corrida">
+                    <div class="info-card">
+                        <span class="info-label">Pergunta atual</span>
+                        <span class="info-valor">
+                            <span th:text="${indiceAtual + 1}">1</span>
+                            de
+                            <span th:text="${totalPerguntas}">5</span>
+                        </span>
+                    </div>
 
-            <form th:action="@{/corrida/{id}/responder(id=${corrida.id})}" method="post">
-                <div class="pergunta">
-                    <h2 th:text="${pergunta.enunciado}">
-                        Enunciado da pergunta
-                    </h2>
-
-                    <div class="alternativas">
-                        <label th:each="alternativa, status : ${pergunta.alternativas}" class="alternativa-opcao">
-                            <input type="radio" name="respostaSelecionada" th:value="${status.index}" required>
-                            <span th:text="${alternativa}">Alternativa</span>
-                        </label>
+                    <div class="info-card">
+                        <span class="info-label">Tempo restante</span>
+                        <span class="info-valor" id="contador-tempo" th:text="${tempoRestante}">60</span>
+                        <span class="info-valor">s</span>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-responder">
-                    Responder
-                </button>
-            </form>
+                <div class="progresso">
+                    <div class="progresso-texto">
+                        <span>Progresso da corrida</span>
+                        <strong>
+                            <span th:text="${indiceAtual + 1}">1</span>/<span th:text="${totalPerguntas}">5</span>
+                        </strong>
+                    </div>
+                    <div class="progresso-barra">
+                        <div class="progresso-preenchido"
+                            th:style="|width: ${((indiceAtual + 1) * 100) / totalPerguntas}%|"></div>
+                    </div>
+                </div>
 
-            <a th:href="@{/lobby}" class="btn-voltar">Voltar ao lobby</a>
+                <p th:if="${mensagem}" th:text="${mensagem}" class="mensagem"></p>
+                <p th:if="${aviso}" th:text="${aviso}" class="aviso"></p>
+                <p th:if="${erro}" th:text="${erro}" class="erro"></p>
+
+                <form id="form-resposta" th:action="@{/corrida/{id}/responder(id=${corrida.id})}" method="post">
+                    <div class="pergunta">
+                        <span class="pergunta-label">Enunciado</span>
+                        <h2 th:text="${pergunta.enunciado}">
+                            Enunciado da pergunta
+                        </h2>
+
+                        <div class="alternativas">
+                            <label th:each="alternativa, status : ${pergunta.alternativas}" class="alternativa-opcao">
+                                <input type="radio" name="respostaSelecionada" th:value="${status.index}" required>
+                                <span th:text="${alternativa}">Alternativa</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="acoes">
+                        <a th:href="@{/lobby}" class="btn-voltar">Voltar ao lobby</a>
+
+                        <button type="submit" class="btn-responder" id="btn-responder">
+                            Responder
+                        </button>
+                    </div>
+                </form>
+            </div>
 
         </div>
     </div>
@@ -195,26 +309,39 @@
     <script th:inline="javascript">
         let tempoRestante = /*[[${tempoRestante}]]*/ 0;
         const contador = document.getElementById("contador-tempo");
+        const formResposta = document.getElementById("form-resposta");
+        const btnResponder = document.getElementById("btn-responder");
+
+        function formatarTempo(segundos) {
+            const min = Math.floor(segundos / 60).toString().padStart(2, "0");
+            const seg = (segundos % 60).toString().padStart(2, "0");
+            return min + ":" + seg;
+        }
+
+        contador.textContent = formatarTempo(tempoRestante);
+
+        formResposta.addEventListener("submit", function () {
+            btnResponder.disabled = true;
+            btnResponder.textContent = "Enviando...";
+        });
 
         const intervalo = setInterval(function () {
             tempoRestante--;
 
             if (tempoRestante <= 10) {
-                contador.style.color = "red";
-                contador.style.fontWeight = "bold";
+                contador.classList.add("tempo-alerta");
             }
 
             if (tempoRestante <= 0) {
-                contador.textContent = "0";
+                contador.textContent = "00:00";
                 clearInterval(intervalo);
 
                 window.location.href = /*[[@{/corrida/{id}/resultado(id=${corrida.id})}]]*/ "";
             } else {
-                contador.textContent = tempoRestante;
+                contador.textContent = formatarTempo(tempoRestante);
             }
         }, 1000);
     </script>
-
 </main>
 
 </html>
