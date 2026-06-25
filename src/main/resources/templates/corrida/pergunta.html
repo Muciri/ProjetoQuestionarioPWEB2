@@ -159,6 +159,16 @@
             line-height: 1.35;
         }
 
+        .pergunta-imagem {
+            display: block;
+            max-width: 100%;
+            max-height: 360px;
+            margin: 0 0 22px;
+            border: 1px solid #d8dfda;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
         .alternativas {
             display: grid;
             gap: 10px;
@@ -285,9 +295,15 @@
                             Enunciado da pergunta
                         </h2>
 
+                        <img th:if="${pergunta.imagemPath != null and !#strings.isEmpty(pergunta.imagemPath)}"
+                            th:src="@{${pergunta.imagemPath}}"
+                            alt="Imagem da pergunta"
+                            class="pergunta-imagem" />
+
                         <div class="alternativas">
                             <label th:each="alternativa, status : ${pergunta.alternativas}" class="alternativa-opcao">
                                 <input type="radio" name="respostaSelecionada" th:value="${status.index}" required>
+                                <strong th:text="${status.index == 0 ? 'A' : status.index == 1 ? 'B' : status.index == 2 ? 'C' : status.index == 3 ? 'D' : 'E'} + ')'">A)</strong>
                                 <span th:text="${alternativa}">Alternativa</span>
                             </label>
                         </div>

@@ -147,8 +147,8 @@
 
             <div th:each="pergunta : ${perguntas}" class="pergunta">
                 <strong th:text="${pergunta.enunciado}"></strong>
-                <div th:if="${pergunta.imagemPath != null}" style="margin-top: 8px;">
-                <img th:src="${pergunta.imagemPath}"
+                <div th:if="${pergunta.imagemPath != null and !#strings.isEmpty(pergunta.imagemPath)}" style="margin-top: 8px;">
+                <img th:src="@{${pergunta.imagemPath}}"
                     alt="Imagem da pergunta"
                     style="max-width: 200px; border-radius: 4px; border: 1px solid #c8e6c9;" />
             </div>
@@ -165,13 +165,15 @@
                 </p>
 
                 <ul class="alternativas">
-                    <li th:each="alt, iterStat : ${pergunta.alternativas}" th:text="${iterStat.index} + ' - ' + ${alt}">
+                    <li th:each="alt, iterStat : ${pergunta.alternativas}">
+                        <span th:text="${iterStat.index == 0 ? 'A' : iterStat.index == 1 ? 'B' : iterStat.index == 2 ? 'C' : iterStat.index == 3 ? 'D' : 'E'} + ' - '"></span>
+                        <span th:text="${alt}"></span>
                     </li>
                 </ul>
 
                 <p>
                     <strong>Resposta correta:</strong>
-                    <span th:text="${pergunta.respostaCorreta}"></span>
+                    <span th:text="${pergunta.respostaCorreta == 0 ? 'Alternativa A' : pergunta.respostaCorreta == 1 ? 'Alternativa B' : pergunta.respostaCorreta == 2 ? 'Alternativa C' : pergunta.respostaCorreta == 3 ? 'Alternativa D' : 'Alternativa E'}"></span>
                 </p>
 
                 <div class="acoes-pergunta">

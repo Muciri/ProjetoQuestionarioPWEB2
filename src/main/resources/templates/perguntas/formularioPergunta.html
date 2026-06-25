@@ -84,28 +84,35 @@
                 <div class="form-group">
                     <label>Alternativas:</label>
 
-                    <input type="text" th:field="*{alternativas[0]}" placeholder="Alternativa 0" required
+                    <input type="text" th:field="*{alternativas[0]}" placeholder="Alternativa A" required
                         style="margin-bottom: 5px;" />
-                    <input type="text" th:field="*{alternativas[1]}" placeholder="Alternativa 1" required
+                    <input type="text" th:field="*{alternativas[1]}" placeholder="Alternativa B" required
                         style="margin-bottom: 5px;" />
-                    <input type="text" th:field="*{alternativas[2]}" placeholder="Alternativa 2" required
+                    <input type="text" th:field="*{alternativas[2]}" placeholder="Alternativa C" required
                         style="margin-bottom: 5px;" />
-                    <input type="text" th:field="*{alternativas[3]}" placeholder="Alternativa 3" required
+                    <input type="text" th:field="*{alternativas[3]}" placeholder="Alternativa D" required
                         style="margin-bottom: 5px;" />
-                    <input type="text" th:field="*{alternativas[4]}" placeholder="Alternativa 4" required />
+                    <input type="text" th:field="*{alternativas[4]}" placeholder="Alternativa E" required />
                 </div>
 
                 <div class="form-group">
-                    <label>Índice da Resposta Correta (0 a 4):</label>
-                    <input type="number" th:field="*{respostaCorreta}" min="0" max="4" required />
+                    <label>Resposta correta:</label>
+                    <select th:field="*{respostaCorreta}" required>
+                        <option value="">-- Selecione a alternativa correta --</option>
+                        <option value="0">Alternativa A</option>
+                        <option value="1">Alternativa B</option>
+                        <option value="2">Alternativa C</option>
+                        <option value="3">Alternativa D</option>
+                        <option value="4">Alternativa E</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label>Imagem da pergunta (opcional):</label>
 
 
-                    <div th:if="${pergunta.imagemPath != null}">
-                        <img th:src="${pergunta.imagemPath}" 
+                    <div th:if="${pergunta.imagemPath != null and !#strings.isEmpty(pergunta.imagemPath)}">
+                        <img th:src="@{${pergunta.imagemPath}}"
                             alt="Imagem da pergunta"
                             style="max-width: 300px; margin-bottom: 10px; display: block;" />
                         <a th:href="@{/perguntas/{id}/excluir-imagem(id=${pergunta.id})}"

@@ -125,7 +125,7 @@ public ModelAndView exibirFormularioCadastro(
     @PreAuthorize("hasRole('ADMIN')")
     public String excluirImagem(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Pergunta pergunta = perguntaService.getPerguntaById(id);
-        if (pergunta.getImagemPath() != null) {
+        if (pergunta.getImagemPath() != null && !pergunta.getImagemPath().isBlank()) {
             perguntaService.excluirImagem(pergunta.getImagemPath());
             pergunta.setImagemPath(null);
             perguntaService.updatePergunta(id, pergunta);

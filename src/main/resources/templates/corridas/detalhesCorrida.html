@@ -72,7 +72,7 @@
             <ul style="padding-left:20px; margin-bottom:8px;">
                 <li th:each="alt, altStat : ${p.alternativas}"
                     th:style="${altStat.index == p.respostaCorreta} ? 'color:#2e7d32; font-weight:bold;' : 'color:#555;'">
-                    <span th:text="${altStat.index == 0 ? 'A' : altStat.index == 1 ? 'B' : altStat.index == 2 ? 'C' : 'D'}"></span>)
+                    <span th:text="${altStat.index == 0 ? 'A' : altStat.index == 1 ? 'B' : altStat.index == 2 ? 'C' : altStat.index == 3 ? 'D' : 'E'}"></span>)
                     <span th:text="${alt}"></span>
                     <span th:if="${altStat.index == p.respostaCorreta}"> ✓</span>
                 </li>
