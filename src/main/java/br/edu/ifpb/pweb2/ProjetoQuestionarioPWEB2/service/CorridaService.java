@@ -1,7 +1,6 @@
 package br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service;
 
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.exception.CorridaNaoEncontradaException;
-import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.controller.entities.CorridaController;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.CorridaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class CorridaService {
         return repository.findAll();
     }
 
-    // Usado no lobby do participante (UC07) — só corridas ativas
+    // Usado no lobby do participante (UC07) - só corridas ativas
     public List<Corrida> listarAtivas() {
         return repository.findByAtivaTrue().stream().filter(c -> c.getPerguntas() != null && !c.getPerguntas().isEmpty()).toList();
     }

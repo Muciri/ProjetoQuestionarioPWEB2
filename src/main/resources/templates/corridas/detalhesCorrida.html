@@ -2,7 +2,7 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Detalhes — ' + ${corrida.titulo}">Detalhes da Corrida</title>
+    <title th:text="'Detalhes - ' + ${corrida.titulo}">Detalhes da Corrida</title>
     <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}"/>
     <link rel="stylesheet" th:href="@{/css/base.css}">
 </head>
@@ -27,7 +27,7 @@
             <tbody>
                 <tr>
                     <td style="padding: 10px 0; font-weight: bold; color: #2e7d32; width: 160px;">Descrição</td>
-                    <td style="padding: 10px 0;" th:text="${corrida.descricao != null ? corrida.descricao : '—'}"></td>
+                    <td style="padding: 10px 0;" th:text="${corrida.descricao != null ? corrida.descricao : '-'}"></td>
                 </tr>
                 <tr style="border-top: 1px solid #e0e0e0;">
                     <td style="padding: 10px 0; font-weight: bold; color: #2e7d32;">Tempo limite</td>
@@ -88,7 +88,7 @@
     <!-- Ações -->
     <div class="acoes mt-md">
         <a class="btn btn-primary" th:href="@{/corridas/{id}/editar(id=${corrida.id})}">Editar Corrida</a>
-        <a class="btn-link" th:href="@{/corridas}">← Voltar à lista</a>
+        <a class="btn-link" th:href="@{/corridas}"><- Voltar à lista</a>
     </div>
  
 </body>

@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CorridaRepository extends JpaRepository<Corrida, Long> {
 
-    // Usado em listarAtivas() — lobby do participante (UC07)
+    // Usado em listarAtivas() - lobby do participante (UC07)
     List<Corrida> findByAtivaTrue();
 }

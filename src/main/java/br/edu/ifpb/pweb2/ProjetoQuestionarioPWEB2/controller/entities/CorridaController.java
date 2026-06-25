@@ -17,9 +17,9 @@ import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.service.CorridaService;
 import jakarta.validation.Valid;
 
 
-// UC01 – Administrador cadastra corrida
-// UC02 – Administrador exclui corrida
-// UC03 – Administrador modifica corrida
+// UC01 - Administrador cadastra corrida
+// UC02 - Administrador exclui corrida
+// UC03 - Administrador modifica corrida
 @Controller
 @RequestMapping("/corridas")
 public class CorridaController {
@@ -28,7 +28,7 @@ public class CorridaController {
     private CorridaService service;
 
     // -------------------------------------------------------
-    // Listagem — GET /corridas
+    // Listagem - GET /corridas
     // -------------------------------------------------------
     @GetMapping
     public String listar(Model model) {
@@ -37,7 +37,7 @@ public class CorridaController {
     }
 
     // -------------------------------------------------------
-    // UC01 — exibe formulário de nova corrida — GET /corridas/nova
+    // UC01 - exibe formulário de nova corrida - GET /corridas/nova
     // -------------------------------------------------------
     @GetMapping("/nova")
     public String formNova(Model model) {
@@ -46,7 +46,7 @@ public class CorridaController {
     }
 
     // -------------------------------------------------------
-    // UC03 — exibe formulário de edição — GET /corridas/{id}/editar
+    // UC03 - exibe formulário de edição - GET /corridas/{id}/editar
     // -------------------------------------------------------
     @GetMapping("/{id}/editar")
     public String formEditar(@PathVariable Long id, Model model) {
@@ -55,7 +55,7 @@ public class CorridaController {
     }
 
     // -------------------------------------------------------
-    // UC01 e UC03 — salva (novo ou editado) — POST /corridas/salvar
+    // UC01 e UC03 - salva (novo ou editado) - POST /corridas/salvar
     //
     // Como distinguir novo de edição:
     //   - Novo:   corrida.getId() == null  (campo hidden vazio no form)
@@ -94,7 +94,7 @@ public class CorridaController {
                     "Corrida \"" + salva.getTitulo() + "\" cadastrada com sucesso!");
             return "redirect:/corridas/" + salva.getId() + "/pos-cadastro";
         } else {
-            // UC03: edição — volta para lista com mensagem
+            // UC03: edição - volta para lista com mensagem
             flash.addFlashAttribute("mensagem",
                     "Corrida \"" + salva.getTitulo() + "\" atualizada com sucesso!");
             return "redirect:/corridas";
@@ -102,7 +102,7 @@ public class CorridaController {
     }
 
     // -------------------------------------------------------
-    // UC01 — tela pós-cadastro: "Deseja cadastrar perguntas?"
+    // UC01 - tela pós-cadastro: "Deseja cadastrar perguntas?"
     // GET /corridas/{id}/pos-cadastro
     // -------------------------------------------------------
     @GetMapping("/{id}/pos-cadastro")
@@ -112,7 +112,7 @@ public class CorridaController {
     }
 
     // -------------------------------------------------------
-    // UC02 — exclui corrida — GET /corridas/{id}/excluir
+    // UC02 - exclui corrida - GET /corridas/{id}/excluir
     // -------------------------------------------------------
     @GetMapping("/{id}/excluir")
     public String excluir(@PathVariable Long id, RedirectAttributes flash) {

@@ -144,7 +144,7 @@
                 <tr th:each="c, stat : ${corridas}">
                     <td th:text="${stat.count}"></td>
                     <td th:text="${c.titulo}"></td>
-                    <td th:text="${c.descricao != null ? c.descricao : '—'}"></td>
+                    <td th:text="${c.descricao != null ? c.descricao : '-'}"></td>
                     <td th:text="${c.tempoSegundos}"></td>
                     <td th:text="${c.perguntas != null ? #lists.size(c.perguntas) : 0}"></td>
                     <td>

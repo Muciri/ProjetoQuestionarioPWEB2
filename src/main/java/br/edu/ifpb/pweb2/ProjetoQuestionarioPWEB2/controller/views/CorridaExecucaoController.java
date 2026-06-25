@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpSession;
 /**
  *
  * Fluxo (POST-Redirect-GET, conforme slide "Spring MVC - Redirect e Flash"):
- *   1. Participante clica em "Iniciar" no lobby → GET /corrida/{id}/iniciar
+ *   1. Participante clica em "Iniciar" no lobby -> GET /corrida/{id}/iniciar
  *   2. Este controlador valida e salva a corrida na sessão (Backlog 13, 14)
  *   3. Redireciona para o fluxo de perguntas do Felipe
  *   4. Ao final (ou timeout), Felipe redireciona para GET /corrida/{id}/resultado
@@ -192,7 +192,7 @@ public class CorridaExecucaoController {
     }
 
 
-    // Tela de resultado — Felipe redireciona aqui após última pergunta ou timeout
+    // Tela de resultado - Felipe redireciona aqui após última pergunta ou timeout
     @GetMapping("/{id}/resultado")
     public String resultado(@PathVariable Long id, HttpSession session, Model model, Principal principal) {
         Participante participante = participanteService.findByNome(principal.getName());
@@ -204,7 +204,7 @@ public class CorridaExecucaoController {
         if (chegadaNormal) {
             preencherResultadoNovo(model, session, participante, corrida);
         } else {
-            // Refresh ou acesso direto — busca resultado anterior na base
+            // Refresh ou acesso direto - busca resultado anterior na base
             return preencherResultadoExistente(model, participante, corrida);
         }
 
@@ -228,20 +228,18 @@ public class CorridaExecucaoController {
         Resultado resultado = resultadoService.salvarResultado(participante, corrida, pontuacaoFinal);
         sessaoCorridaService.encerrarCorrida(session);
 
-        BigDecimal pontuacao = resultado != null
-                ? resultado.getPontuacao()
-                : resultadoService.buscarUltimo(participante, corrida)
-                                  .map(Resultado::getPontuacao)
-                                  .orElse(BigDecimal.ZERO);
+        boolean jaParticipou = (resultado == null);
+        BigDecimal pontuacao = BigDecimal.valueOf(pontuacaoFinal);
 
-        logger.info("Resultado registrado — participante: {}, corrida: {}, pontuação: {}, expirou: {}",
-                participante.getNome(), corrida.getTitulo(), pontuacao, expirou);
+        logger.info("Resultado registrado - participante: {}, corrida: {}, pontuação: {}, expirou: {}, jaParticipou: {}",
+                participante.getNome(), corrida.getTitulo(), pontuacao, expirou, jaParticipou);
 
         model.addAttribute("corrida", corrida);
         model.addAttribute("acertos", acertos);
         model.addAttribute("totalPerguntas", corrida.getPerguntas().size());
         model.addAttribute("pontuacao", pontuacao);
         model.addAttribute("expirou", expirou);
+        model.addAttribute("jaParticipou", jaParticipou);
         model.addAttribute("mensagem", expirou
                 ? "Tempo esgotado! Você marcou " + pontuacao + " ponto(s)."
                 : "Parabéns! Você marcou " + pontuacao + " ponto(s)!");

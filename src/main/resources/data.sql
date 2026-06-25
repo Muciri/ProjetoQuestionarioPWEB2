@@ -11,9 +11,9 @@ TRUNCATE TABLE resultado, pergunta_alternativas, pergunta, corrida, participante
     RESTART IDENTITY CASCADE;
 
 -- PARTICIPANTES
---   ids 1–4: equipe (Murilo = admin)
---   ids 5–7: participantes COM pontuação
---   ids 8–9: participantes SEM pontuação (testar aviso do UC09)
+--   ids 1-4: equipe (Murilo = admin)
+--   ids 5-7: participantes COM pontuação
+--   ids 8-9: participantes SEM pontuação (testar aviso do UC09)
 
 INSERT INTO users(username, password, enabled) VALUES
 ('Murilo', '$2a$12$QBxhmukjlVrgwUdU3.XW8.VaSj9RNxvLM/gcxkIwRE7i2E.BeFYeu', true),
@@ -50,9 +50,9 @@ INSERT INTO Participante (nome, email, username, admin) VALUES
 ('Maria',      'maria@email.com',      'Maria',      false);
 
 -- CORRIDAS
---   ids 1–5: ATIVAS com perguntas    (cenários A e B)
+--   ids 1-5: ATIVAS com perguntas    (cenários A e B)
 --   id  6  : INATIVA com perguntas   (cenário D)
---   ids 7–8: ATIVAS SEM perguntas    (cenário C — listar/criar perguntas)
+--   ids 7-8: ATIVAS SEM perguntas    (cenário C - listar/criar perguntas)
 --   id  9  : INATIVA SEM perguntas   (cenário D limpo)
 
 INSERT INTO Corrida (titulo, descricao, tempo_segundos, ativa, participante_id_participante) VALUES
@@ -64,11 +64,11 @@ INSERT INTO Corrida (titulo, descricao, tempo_segundos, ativa, participante_id_p
 ('Corrida de Banco de Dados', 'Questões sobre SQL, tabelas, chaves e relacionamentos.',                 420, true, 1),
 -- INATIVA com perguntas
 ('Corrida Antiga Inativa',    'Corrida antiga mantida apenas como exemplo inativo.',                    300, false, 1),
--- ATIVAS sem perguntas (para UC04 — admin cadastra perguntas)
-('Corrida Vazia de Português','Corrida ativa SEM perguntas — usar para cadastrar perguntas (UC04).',    300, true, 1),
-('Corrida Vazia de História', 'Corrida ativa SEM perguntas — segunda opção para cadastro de perguntas.', 240, true, 1),
+-- ATIVAS sem perguntas (para UC04 - admin cadastra perguntas)
+('Corrida Vazia de Português','Corrida ativa SEM perguntas - usar para cadastrar perguntas (UC04).',    300, true, 1),
+('Corrida Vazia de História', 'Corrida ativa SEM perguntas - segunda opção para cadastro de perguntas.', 240, true, 1),
 -- INATIVA sem perguntas
-('Rascunho Inativo',          'Corrida inativa e sem perguntas — útil para UC02/UC03 sem efeitos.',     180, false, 1);
+('Rascunho Inativo',          'Corrida inativa e sem perguntas - útil para UC02/UC03 sem efeitos.',     180, false, 1);
 
 -- PERGUNTAS
 --   Regra: cada corrida ativa popular possui 3 perguntas somando 10 pontos
@@ -176,7 +176,7 @@ INSERT INTO pergunta_alternativas (id_pergunta, alternativa) VALUES
 -- RESULTADOS - cenário A (corridas realizadas)
 --   Participantes 5 (Ana), 6 (Lucas), 7 (Bianca) já jogaram várias corridas
 --   Participantes 2 (Gabriel), 3 (Francisco), 4 (Felipe) jogaram algumas
---   Participantes 8 (Joao) e 9 (Maria) NÃO têm pontuação — aviso UC09
+--   Participantes 8 (Joao) e 9 (Maria) NÃO têm pontuação - aviso UC09
 --   Cada corrida tem várias linhas para o ranking parecer disputado
 
 INSERT INTO Resultado (id_participante, id_corrida, pontuacao, data_hora) VALUES

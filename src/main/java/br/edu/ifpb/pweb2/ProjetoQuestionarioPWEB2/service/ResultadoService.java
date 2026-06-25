@@ -36,7 +36,7 @@ public class ResultadoService {
      */
     public Resultado salvarResultado(Participante participante, Corrida corrida, int pontuacaoFinal) {
         if (resultadoRepository.existsByParticipanteAndCorrida(participante, corrida)) {
-            logger.info("Resultado já existente para participante {} na corrida {} — não persistido (RN02)",
+            logger.info("Resultado já existente para participante {} na corrida {} - não persistido (RN02)",
                     participante.getId(), corrida.getId());
             return null;
         }
@@ -50,7 +50,7 @@ public class ResultadoService {
         resultado.setDataHora(LocalDateTime.now());
 
         Resultado salvo = resultadoRepository.save(resultado);
-        logger.info("Resultado salvo — id: {}, participante: {}, corrida: {}, pontuação: {}",
+        logger.info("Resultado salvo - id: {}, participante: {}, corrida: {}, pontuação: {}",
                 salvo.getId(), participante.getNome(), corrida.getTitulo(), pontuacao);
         return salvo;
     }

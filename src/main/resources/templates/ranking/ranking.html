@@ -196,7 +196,7 @@
         <div class="ranking-header">
             <div>
                 <h1 class="ranking-titulo"
-                    th:text="${corridaFiltro != null} ? '🏅 Ranking — ' + ${corridaFiltro.titulo} : '🏅 Ranking Geral'">
+                    th:text="${corridaFiltro != null} ? '🏅 Ranking - ' + ${corridaFiltro.titulo} : '🏅 Ranking Geral'">
                     Ranking
                 </h1>
                 <p class="ranking-subtitulo"
@@ -208,7 +208,7 @@
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <a class="btn-voltar" th:href="@{/ranking}"
                    th:if="${corridaFiltro != null}">Ranking Geral</a>
-                <a class="btn-voltar" th:href="@{/lobby}">← Lobby</a>
+                <a class="btn-voltar" th:href="@{/lobby}"><- Lobby</a>
             </div>
         </div>
 
@@ -283,14 +283,14 @@
              th:with="anterior=${corridaFiltro != null} ? @{/ranking/{id}(id=${corridaFiltro.id}, page=${resultados.number - 1}, size=${tamanhoPagina})} : @{/ranking(page=${resultados.number - 1}, size=${tamanhoPagina})},
                       proxima=${corridaFiltro != null} ? @{/ranking/{id}(id=${corridaFiltro.id}, page=${resultados.number + 1}, size=${tamanhoPagina})} : @{/ranking(page=${resultados.number + 1}, size=${tamanhoPagina})}">
 
-            <a class="btn-pagina" th:href="${anterior}" th:unless="${resultados.first}">← Anterior</a>
-            <span class="btn-pagina desativado" th:if="${resultados.first}">← Anterior</span>
+            <a class="btn-pagina" th:href="${anterior}" th:unless="${resultados.first}"><- Anterior</a>
+            <span class="btn-pagina desativado" th:if="${resultados.first}"><- Anterior</span>
 
             <span class="info-pagina"
                   th:text="'Página ' + (${resultados.number + 1}) + ' de ' + ${resultados.totalPages}"></span>
 
-            <a class="btn-pagina" th:href="${proxima}" th:unless="${resultados.last}">Próxima →</a>
-            <span class="btn-pagina desativado" th:if="${resultados.last}">Próxima →</span>
+            <a class="btn-pagina" th:href="${proxima}" th:unless="${resultados.last}">Próxima -></a>
+            <span class="btn-pagina desativado" th:if="${resultados.last}">Próxima -></span>
         </div>
 
         <!-- UC09: aviso se o participante logado não tem pontuação -->

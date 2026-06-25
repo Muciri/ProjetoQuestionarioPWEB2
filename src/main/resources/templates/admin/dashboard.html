@@ -146,7 +146,7 @@
             <!-- Alerta: corrida ativa mas sem perguntas -->
             <span class="alerta-sem-perguntas"
                   th:if="${c.ativa and (c.perguntas == null or #lists.isEmpty(c.perguntas))}">
-                ⚠ Corrida ativa sem perguntas — será ignorada no lobby.
+                ⚠ Corrida ativa sem perguntas - será ignorada no lobby.
             </span>
         </div>
         <div class="lista-item-acoes acoes">
@@ -160,7 +160,7 @@
     </div>
 
     <div class="voltar mt-md" style="margin-bottom: 32px;">
-        <a th:href="@{/corridas}">Ver lista completa de corridas →</a>
+        <a th:href="@{/corridas}">Ver lista completa de corridas -></a>
     </div>
 
     <!-- Seção: Perguntas -->
@@ -177,7 +177,7 @@
         <div class="lista-item-info">
             <p class="titulo" th:text="${p.enunciado}"></p>
             <p class="sub"
-               th:text="'Corrida: ' + (${p.corrida != null ? p.corrida.titulo : '—'})"></p>
+               th:text="'Corrida: ' + (${p.corrida != null ? p.corrida.titulo : '-'})"></p>
         </div>
         <div class="lista-item-acoes acoes">
             <a class="btn-editar"  th:href="@{/perguntas/editar/{id}(id=${p.id})}">Editar</a>
@@ -188,7 +188,7 @@
     </div>
 
     <div class="voltar mt-md">
-        <a th:href="@{/}">← Voltar ao Início</a>
+        <a th:href="@{/}"><- Voltar ao Início</a>
     </div>
 
 </body>

@@ -192,6 +192,9 @@
             <div class="resultado-body">
                 <p class="resultado-aviso" th:if="${aviso}" th:text="${aviso}"></p>
                 <p class="resultado-erro" th:if="${erro}" th:text="${erro}"></p>
+                <p class="resultado-aviso" th:if="${jaParticipou}">
+                    Você já tinha concluído esta corrida. Foi só uma nova tentativa  no ranking continua valendo a sua primeira pontuação.
+                </p>
 
                 <p class="corrida-nome">
                     Corrida:

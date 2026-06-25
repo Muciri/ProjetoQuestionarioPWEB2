@@ -5,6 +5,8 @@ import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Corrida;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.model.Pergunta;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.CorridaRepository;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.PerguntaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -16,6 +18,8 @@ import java.util.UUID;
 
 @Service
 public class PerguntaService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PerguntaService.class);
 
     private PerguntaRepository perguntaRepository;
     private CorridaRepository corridaRepository;
@@ -81,7 +85,7 @@ public class PerguntaService {
             Path arquivo = Paths.get(pastaAbsoluta + imagemPath);
             Files.deleteIfExists(arquivo);
         } catch (IOException e) {
-            System.err.println("Erro ao excluir imagem: " + e.getMessage());
+            logger.warn("Erro ao excluir imagem: {}", e.getMessage());
         }
     }
 

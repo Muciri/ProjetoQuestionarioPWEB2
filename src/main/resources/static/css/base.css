@@ -1,5 +1,5 @@
 /* =============================================
-   BASE.CSS — Projeto Questionário
+   BASE.CSS - Projeto Questionário
    Importar em todos os templates:
    <link rel="stylesheet" th:href="@{/css/base.css}">
    ============================================= */
@@ -11,7 +11,7 @@
     padding: 0;
 }
 
-/* ── Tipografia e corpo ── */
+/* Tipografia e corpo */
 body {
     font-family: Arial, sans-serif;
     font-size: 15px;
@@ -41,13 +41,13 @@ p {
     line-height: 1.6;
 }
 
-/* ── Layout principal ── */
+/* Layout principal */
 main {
     flex: 1;
     padding: 40px;
 }
 
-/* ── Header ── */
+/* Header */
 .header {
     background-color: #2e7d32;
     color: white;
@@ -81,7 +81,7 @@ main {
     text-decoration: underline;
 }
 
-/* ── Footer ── */
+/* Footer */
 .footer {
     background-color: #2e7d32;
     color: #c8e6c9;
@@ -90,7 +90,7 @@ main {
     font-size: 13px;
 }
 
-/* ── Cards ── */
+/* Cards */
 .card {
     background-color: #ffffff;
     border-radius: 8px;
@@ -108,7 +108,7 @@ main {
     margin: 0 auto;
 }
 
-/* ── Formulários ── */
+/* Formulários */
 .campo {
     margin-bottom: 18px;
 }
@@ -170,7 +170,7 @@ textarea { resize: vertical; }
     cursor: pointer;
 }
 
-/* ── Botões ── */
+/* Botões */
 .btn {
     display: inline-block;
     padding: 10px 22px;
@@ -220,7 +220,7 @@ textarea { resize: vertical; }
 
 .btn-full { width: 100%; text-align: center; }
 
-/* ── Tabelas ── */
+/* Tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -263,7 +263,7 @@ tbody td {
     font-style: italic;
 }
 
-/* ── Badges de status ── */
+/* Badges de status */
 .badge {
     display: inline-block;
     padding: 3px 10px;
@@ -275,7 +275,7 @@ tbody td {
 .badge-ativa  { background-color: #c8e6c9; color: #1b5e20; }
 .badge-inativa { background-color: #f5f5f5; color: #757575; }
 
-/* ── Mensagens flash ── */
+/* Mensagens flash */
 .mensagem-sucesso {
     background-color: #e8f5e9;
     border-left: 4px solid #2e7d32;
@@ -303,7 +303,7 @@ tbody td {
     display: block;
 }
 
-/* ── Ações em linha (tabelas) ── */
+/* Ações em linha (tabelas) */
 .acoes { display: flex; gap: 6px; align-items: center; }
 
 .acoes a {
@@ -323,7 +323,7 @@ tbody td {
 .acoes .btn-ver      { background-color: #e3f2fd; color: #1565c0; border-color: #90caf9; }
 .acoes .btn-ver:hover      { background-color: #bbdefb; }
 
-/* ── Utilitários ── */
+/* Utilitários */
 .mt-sm  { margin-top: 12px; }
 .mt-md  { margin-top: 24px; }
 .mt-lg  { margin-top: 40px; }

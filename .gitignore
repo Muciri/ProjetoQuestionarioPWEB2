@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Imagens enviadas em runtime ###
+src/main/resources/static/uploads/

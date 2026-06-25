@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
-// UC09 — Participante consulta ranking geral
+// UC09 - Participante consulta ranking geral
 @Controller
 @RequestMapping("/ranking")
 public class RankingController {
@@ -32,7 +32,7 @@ public class RankingController {
         this.participanteService = participanteService;
     }
 
-    // Backlog 22 — ranking geral
+    // Backlog 22 - ranking geral
     @GetMapping
     public String rankingGeral(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "5") int size,
@@ -53,7 +53,7 @@ public class RankingController {
         return "ranking/ranking";
     }
 
-    // Backlog 23 — ranking por corrida
+    // Backlog 23 - ranking por corrida
     @GetMapping("/{corridaId}")
     public String rankingPorCorrida(@PathVariable Long corridaId,
                                     @RequestParam(defaultValue = "0") int page,

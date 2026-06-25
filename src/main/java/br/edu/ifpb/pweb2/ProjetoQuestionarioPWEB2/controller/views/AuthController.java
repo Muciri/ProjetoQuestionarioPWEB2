@@ -7,10 +7,8 @@ import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.AuthorityRepository
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.ParticipanteRepository;
 import br.edu.ifpb.pweb2.ProjetoQuestionarioPWEB2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -51,6 +49,16 @@ public class AuthController {
             redirectAttributes.addFlashAttribute(
                     "erro",
                     "Usuário já existe."
+            );
+
+            return new ModelAndView("redirect:/autenticacao/cadastro");
+        }
+
+        if (participanteRepository.existsByEmail(email)) {
+
+            redirectAttributes.addFlashAttribute(
+                    "erro",
+                    "E-mail já cadastrado."
             );
 
             return new ModelAndView("redirect:/autenticacao/cadastro");

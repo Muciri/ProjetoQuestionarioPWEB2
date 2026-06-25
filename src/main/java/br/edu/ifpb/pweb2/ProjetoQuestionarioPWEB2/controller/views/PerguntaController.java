@@ -72,10 +72,21 @@ public ModelAndView exibirFormularioCadastro(
             pergunta.setCorrida(corrida);
         }
 
+        if (pergunta.getAlternativas() != null) {
+            pergunta.getAlternativas().removeIf(alt -> alt == null || alt.trim().isEmpty());
+        }
+
+        if (pergunta.getRespostaCorreta() != null && pergunta.getAlternativas() != null
+                && pergunta.getRespostaCorreta() >= pergunta.getAlternativas().size()) {
+            bindingResult.rejectValue("respostaCorreta", "respostaCorreta.invalida",
+                    "Selecione uma alternativa preenchida como resposta correta.");
+        }
+
         if (bindingResult.hasErrors()) {
             model.setViewName("perguntas/formularioPergunta");
             model.addObject("titulo", pergunta.getId() != null ? "Editar Pergunta" : "Nova Pergunta");
             model.addObject("corridas", corridaService.listar());
+            model.addObject("corridaId", corridaId);
             return model;
         }
 
